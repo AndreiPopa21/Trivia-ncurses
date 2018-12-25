@@ -3,17 +3,52 @@
 #include <string.h>
 #include <ncurses.h>
 
+#define BUFMAX 300
+
+typedef struct Question{
+    char* question;
+    char* a_answer;
+    char* b_answer;
+    char* c_answer;
+    char* d_answer;
+    char* right_answer;
+} Question;
+
 void splash_screen();
+Question* get_questions(int argc, char* argv[],int* questions_count);
+void free_questions_memory(Question* questions, int quest_count);
 
-int main(){
+int main(int argc, char* argv[]){
 
-    initscr();
+    if(argc<2){
+        fprintf(stderr,"Nu sunt suficiente argumente\n");
+    }else{
+        fprintf(stdout,"Ai dat suficiente argumente\n");
+        Question* questions;
+        int* questions_count;
+        questions= get_questions(argc,argv,questions_count);
+
+        for(int i=0;i< (*questions_count);i++){
+            printf("%s\n",questions[i].question);
+            printf("%s\n",questions[i].right_answer);
+            printf("%s\n",questions[i].a_answer);
+            printf("%s\n",questions[i].b_answer);
+            printf("%s\n",questions[i].c_answer);
+            printf("%s\n",questions[i].d_answer);
+        }
+
+        free_questions_memory(questions,*questions_count);
+
+
+    }
+
+    /*initscr();
     cbreak();   
     curs_set(0); 
     //printw("Hello Ncurses\n");
     splash_screen();
     getch();
-    endwin(); 
+    endwin();*/ 
     return 0;
 }
 
@@ -70,7 +105,7 @@ void splash_screen(){
        /* if((c=getch())!=0){
             break;
         }*/
-        for(int i=0;i<6;i++){
+   //     for(int i=0;i<6;i++){
         attron(A_REVERSE);
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
@@ -82,6 +117,79 @@ void splash_screen(){
          refresh();
         napms(500);
        
-    }
+   // }
     
 }
+
+Question* get_questions(int argc, char* argv[],int* questions_count){
+    FILE* src;
+    char buff_question[BUFMAX];
+    char buff_answers[BUFMAX];
+    src=fopen(argv[1],"r");
+    if(!src){
+        fprintf(stderr,"Nu s-a putut deschide fisierul cu indexul: %d\n",1);
+        return NULL;
+    }else{
+
+        Question* questions = (Question*) malloc(5*sizeof(Question)); 
+        int quest_index=0;
+        while(fgets(buff_question,BUFMAX,src)!=NULL){
+           
+            char* token=strtok(buff_question, "|");
+           
+            questions[quest_index].question=(char*)malloc(300*sizeof(char));
+            strcpy(questions[quest_index].question,token);
+            
+            token=strtok(NULL,"|");
+            
+          
+            questions[quest_index].right_answer=(char*) malloc(2*sizeof(char));
+            strcpy(questions[quest_index].right_answer,token);
+
+            fgets(buff_answers,BUFMAX,src);
+            
+            token=strtok(buff_answers, "|");
+            questions[quest_index].a_answer=(char*)malloc(30*sizeof(char));
+            questions[quest_index].b_answer=(char*)malloc(30*sizeof(char));
+            questions[quest_index].c_answer=(char*)malloc(30*sizeof(char));
+            questions[quest_index].d_answer=(char*)malloc(30*sizeof(char));
+            strcpy(questions[quest_index].a_answer,token);
+            for(int i=0;i<3;i++){
+                token=strtok(NULL,"|");
+                switch(i){
+                    case 0:
+                        strcpy(questions[quest_index].b_answer,token);
+                        break;
+                    case 1:
+                        strcpy(questions[quest_index].c_answer,token);
+                        break;
+                    case 2:
+                        strcpy(questions[quest_index].d_answer,token);
+                        break;
+                }
+            }
+        
+            quest_index++;
+        }
+       
+        *questions_count=quest_index;
+        return questions;
+    }
+}
+
+void free_questions_memory(Question* questions, int quest_count){
+    for(int i=0;i<quest_count;i++){
+        free(questions[i].question);
+        free(questions[i].right_answer);
+        free(questions[i].a_answer);
+        free(questions[i].b_answer);
+        free(questions[i].c_answer);
+        free(questions[i].d_answer);
+    }
+    free(questions);
+}
+
+
+
+
+
