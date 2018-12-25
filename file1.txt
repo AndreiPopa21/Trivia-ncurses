@@ -1,0 +1,8 @@
+Cat fac 1+1?|A
+A.2|B.3|C.4|D.5
+Cine e pe bancnota de 1 dolar?|C
+A.JFK|B.Abraham Lincoln|C.George Washington|D.Pitagora
+Cine e presedintele LSAC?|D
+A.Burtea|B.Tzava|C.Crispy|D.Roxana Voica
+Cate oscaruri a castigat Leonardo DiCaprio?|B
+A.2|B.1|C.0|D.fara numar
