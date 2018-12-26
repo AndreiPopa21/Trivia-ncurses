@@ -4,6 +4,9 @@
 #include <ncurses.h>
 
 #define BUFMAX 300
+#define ANSWER_BUFF 30
+#define QUESTION_BUFF 300
+#define RIGHT_ANSWER_BUFF 2
 
 typedef struct Question{
     char* question;
@@ -137,22 +140,22 @@ Question* get_questions(int argc, char* argv[],int* questions_count){
            
             char* token=strtok(buff_question, "|");
            
-            questions[quest_index].question=(char*)malloc(300*sizeof(char));
+            questions[quest_index].question=(char*)malloc(QUESTION_BUFF*sizeof(char));
             strcpy(questions[quest_index].question,token);
             
             token=strtok(NULL,"|");
             
           
-            questions[quest_index].right_answer=(char*) malloc(2*sizeof(char));
+            questions[quest_index].right_answer=(char*) malloc(RIGHT_ANSWER_BUFF*sizeof(char));
             strcpy(questions[quest_index].right_answer,token);
 
             fgets(buff_answers,BUFMAX,src);
             
             token=strtok(buff_answers, "|");
-            questions[quest_index].a_answer=(char*)malloc(30*sizeof(char));
-            questions[quest_index].b_answer=(char*)malloc(30*sizeof(char));
-            questions[quest_index].c_answer=(char*)malloc(30*sizeof(char));
-            questions[quest_index].d_answer=(char*)malloc(30*sizeof(char));
+            questions[quest_index].a_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
+            questions[quest_index].b_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
+            questions[quest_index].c_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
+            questions[quest_index].d_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             strcpy(questions[quest_index].a_answer,token);
             for(int i=0;i<3;i++){
                 token=strtok(NULL,"|");

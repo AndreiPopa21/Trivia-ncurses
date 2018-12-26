@@ -1,6 +1,6 @@
 run: trivia.c
 	gcc trivia.c -lncurses -o trivia
-	./trivia
+	./trivia file1.txt
 
 build: trivia.c
 	gcc trivia.c -lncurses -o trivia
