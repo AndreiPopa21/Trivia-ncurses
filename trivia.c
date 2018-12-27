@@ -36,25 +36,19 @@ int main(int argc, char* argv[]){
         }
         
         printf("Numarul de intrebari este: %d\n",questions_count);
-   
-        for(int i=0;i< questions_count;i++){
-           printf("%s\n",questions[i].question);
-           printf("%s\n",questions[i].right_answer);
-           printf("%s\n",questions[i].a_answer);
-           printf("%s\n",questions[i].b_answer);
-           printf("%s\n",questions[i].c_answer);
-           printf("%s\n",questions[i].d_answer);
-        }
+        display_questions(questions,questions_count);
         free_questions_memory(questions,questions_count);
     }
 
     initscr();
     cbreak();   
     curs_set(0); 
-    //printw("Hello Ncurses\n");
+    noecho();
+    
     splash_screen();
-    getch();
+    //getch();
     endwin();
+    //printf("DOamne\n");
     return 0;
 }
 

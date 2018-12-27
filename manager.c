@@ -49,16 +49,15 @@ void splash_screen(){
     
     char press_any_key[]={"- press any key to continue -"};
     int yLoc = midY+ LINES/4;
-    
-  //  while(1){
-        /*char c = getch();   
-        if(c!=0){
-            break;
-        }*/
-       /* if((c=getch())!=0){
-            break;
-        }*/
-   //     for(int i=0;i<6;i++){
+    nodelay(stdscr,TRUE);
+
+       while(1){
+           char c = getch();
+           if(c>=97){
+               
+               nodelay(stdscr,FALSE);
+               break;
+           }
         attron(A_REVERSE);
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
@@ -69,7 +68,6 @@ void splash_screen(){
         printw("%s",press_any_key);
          refresh();
         napms(500);
-       
-   // }
-    
+       }
+    printf("DOamne\n");
 }

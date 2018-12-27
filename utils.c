@@ -86,3 +86,14 @@ Question* resize_questions_container(Question* questions, int* curr_container_si
     *curr_container_size = (*curr_container_size)*2;
     return addr;
 }
+
+void display_questions(Question* questions, int questions_count){
+      for(int i=0;i< questions_count;i++){
+           printf("%s\n",questions[i].question);
+           printf("%s\n",questions[i].right_answer);
+           printf("%s\n",questions[i].a_answer);
+           printf("%s\n",questions[i].b_answer);
+           printf("%s\n",questions[i].c_answer);
+           printf("%s\n",questions[i].d_answer);
+        }
+}
