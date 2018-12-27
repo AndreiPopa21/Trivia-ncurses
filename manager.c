@@ -13,15 +13,16 @@ void splash_screen(){
     vline('|',LINES);
     mvvline(0,COLS-1,'|',LINES);
     mvhline(LINES-1,0,'*',COLS);
-    
+    refresh();
+
     char line0[]={"                                  "};
-    char line1[]={"MMMMMMMMMM        o           o       "};
-    char line2[]={"    HH    MMMM                    ### "};
-    char line3[]={"    HH    H   H   H  V     V  H  I   I"};
-    char line4[]={"    HH    HMMM    H   V   V   H  W R W"};
-    char line5[]={"    HH    H  H    H    V V    H  W   W"};
-    char line6[]={"    HH    H   H   H     V     H  H   H"};
-    char line7[]={"                                  "};
+    char line1[]={"MMMMMMMMMM         O            O         "};
+    char line2[]={"    HH    MMMMM                     ####  "};
+    char line3[]={"    HH    H    H   H V       V  H  I    I "};
+    char line4[]={"    HH    HMMMM    H  V     V   H  WRRRRW "};
+    char line5[]={"    HH    H  H     H   V   V    H  W    W "};
+    char line6[]={"    HH    H   H    H    V V     H  H    H "};
+    char line7[]={"    HH    H    H   H     V      H  H    H "};
 
     int midY= LINES/2;
     int midX= COLS/2;
@@ -31,30 +32,51 @@ void splash_screen(){
     int offset = -(midY-LINES/4);
     move(midY+offset,midX-strlen(line1)/2);
     printw("%s",line1);
+    refresh();
+    napms(42);
     move(midY+offset+1,midX-strlen(line2)/2);
     printw("%s",line2);
+    refresh();
+    napms(42);
     move(midY+offset+2,midX-strlen(line3)/2);
     printw("%s",line3);
+    refresh();
+    napms(42);
     move(midY+offset+3,midX-strlen(line4)/2);   
     printw("%s",line4);
+    refresh();
+    napms(42);
     move(midY+offset+4,midX-strlen(line5)/2);
     printw("%s",line5);
+    refresh();
+    napms(42);
     move(midY+offset+5,midX-strlen(line6)/2);
-    printw("%s",line6);   
+    printw("%s",line6);
+    refresh();
+    napms(42);
+    move(midY+offset+6,midX-strlen(line7)/2);
+    printw("%s",line7);
+    refresh();
+    napms(42);   
 
-    char copyright[]={"copyright - Popa Stefan"};
+    char copyright[]={"copyright © Popa Stefan"};
     move(LINES-3,midX-strlen(copyright)/2);
-    printw("%s",copyright); 
+    for(int i=0;i<strlen(copyright);i++){
+        printw("%c",copyright[i]);
+        refresh();
+        napms(42);
+    }
+
+    //printw("%s",copyright); 
     
     
     char press_any_key[]={"- press any key to continue -"};
     int yLoc = midY+ LINES/4;
     nodelay(stdscr,TRUE);
-
+    char c;
        while(1){
-           char c = getch();
-           if(c>=97){
-               
+           c = getch();
+           if(c>0){
                nodelay(stdscr,FALSE);
                break;
            }
@@ -63,11 +85,16 @@ void splash_screen(){
         printw("%s",press_any_key);
         refresh();
         napms(500);
+        c = getch();
+           if(c>0){  
+               nodelay(stdscr,FALSE);
+               break;
+           }
         attroff(A_REVERSE);
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
          refresh();
         napms(500);
        }
-    printf("DOamne\n");
+    
 }
