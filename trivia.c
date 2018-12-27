@@ -7,6 +7,7 @@
 #define ANSWER_BUFF 30
 #define QUESTION_BUFF 300
 #define RIGHT_ANSWER_BUFF 2
+#define INITIAL_QUESTIONS_CONTAINER_SIZE 4
 
 typedef struct Question{
     char* question;
@@ -18,31 +19,51 @@ typedef struct Question{
 } Question;
 
 void splash_screen();
-Question* get_questions(int argc, char* argv[],int* questions_count);
+Question* get_questions(FILE* src,int* questions_count,Question* questions,int* curr_container_size);
 void free_questions_memory(Question* questions, int quest_count);
+Question* resize_questions_container(Question* questions, int* curr_container_size);
 
 int main(int argc, char* argv[]){
 
     if(argc<2){
-        fprintf(stderr,"Nu sunt suficiente argumente\n");
+        fprintf(stderr,"Nu s-au dat argumente in linia de comanda\n");
+        return 1;   
     }else{
         fprintf(stdout,"Ai dat suficiente argumente\n");
-        Question* questions;
-        int* questions_count;
-        questions= get_questions(argc,argv,questions_count);
 
-        for(int i=0;i< (*questions_count);i++){
-            printf("%s\n",questions[i].question);
-            printf("%s\n",questions[i].right_answer);
-            printf("%s\n",questions[i].a_answer);
-            printf("%s\n",questions[i].b_answer);
-            printf("%s\n",questions[i].c_answer);
-            printf("%s\n",questions[i].d_answer);
+        Question* questions=(Question*)malloc(INITIAL_QUESTIONS_CONTAINER_SIZE*sizeof(Question));
+        //int* questions_count=(int*)malloc(sizeof(int));
+        //int* curr_container_size = (int*)malloc(sizeof(int));
+
+        int curr_container_size=INITIAL_QUESTIONS_CONTAINER_SIZE;
+        int questions_count=0;
+
+        FILE* src;
+        for(int i=1;i<argc;i++){
+            src = fopen(argv[i],"r");
+            if(!src){
+                fprintf(stderr,"Nu s-a putut deschide fisierul cu indexul: %d\n",i);
+                return 0;
+            }else{
+                fprintf(stdout,"S-a putut deschide fisierul cu indexul: %d\n",i);
+                
+                questions=get_questions(src,&questions_count,questions,&curr_container_size);
+                
+                fclose(src);
+            }
         }
-
-        free_questions_memory(questions,*questions_count);
-
-
+        
+        printf("Numarul de intrebari este: %d\n",questions_count);
+   
+        for(int i=0;i< questions_count;i++){
+           printf("%s\n",questions[i].question);
+           printf("%s\n",questions[i].right_answer);
+           printf("%s\n",questions[i].a_answer);
+           printf("%s\n",questions[i].b_answer);
+           printf("%s\n",questions[i].c_answer);
+           printf("%s\n",questions[i].d_answer);
+        }
+        free_questions_memory(questions,questions_count);
     }
 
     /*initscr();
@@ -124,26 +145,27 @@ void splash_screen(){
     
 }
 
-Question* get_questions(int argc, char* argv[],int* questions_count){
-    FILE* src;
+Question* get_questions(FILE* src,int* questions_count,Question* questions,int *curr_container_size){
+   
     char buff_question[BUFMAX];
     char buff_answers[BUFMAX];
-    src=fopen(argv[1],"r");
-    if(!src){
-        fprintf(stderr,"Nu s-a putut deschide fisierul cu indexul: %d\n",1);
-        return NULL;
-    }else{
 
-        Question* questions = (Question*) malloc(5*sizeof(Question)); 
-        int quest_index=0;
-        while(fgets(buff_question,BUFMAX,src)!=NULL){
-           
-            char* token=strtok(buff_question, "|");
+    int quest_index = *questions_count;
+    while(fgets(buff_question,BUFMAX,src)!=NULL){
+
+
+            if(quest_index>=(*curr_container_size)){
+                questions= resize_questions_container(questions,curr_container_size);
+                printf("S-a marit containerul\n");
+            }
+            printf("The curr size: %d | The occupied size: %d \n",(*curr_container_size),quest_index+1);
+
+            char* token=strtok(buff_question, "|\n");
            
             questions[quest_index].question=(char*)malloc(QUESTION_BUFF*sizeof(char));
             strcpy(questions[quest_index].question,token);
             
-            token=strtok(NULL,"|");
+            token=strtok(NULL,"|\n");
             
           
             questions[quest_index].right_answer=(char*) malloc(RIGHT_ANSWER_BUFF*sizeof(char));
@@ -151,14 +173,14 @@ Question* get_questions(int argc, char* argv[],int* questions_count){
 
             fgets(buff_answers,BUFMAX,src);
             
-            token=strtok(buff_answers, "|");
+            token=strtok(buff_answers, "|\n");
             questions[quest_index].a_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].b_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].c_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].d_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             strcpy(questions[quest_index].a_answer,token);
             for(int i=0;i<3;i++){
-                token=strtok(NULL,"|");
+                token=strtok(NULL,"|\n");
                 switch(i){
                     case 0:
                         strcpy(questions[quest_index].b_answer,token);
@@ -167,17 +189,17 @@ Question* get_questions(int argc, char* argv[],int* questions_count){
                         strcpy(questions[quest_index].c_answer,token);
                         break;
                     case 2:
-                        strcpy(questions[quest_index].d_answer,token);
+                         strcpy(questions[quest_index].d_answer,token);
                         break;
                 }
             }
         
             quest_index++;
-        }
-       
-        *questions_count=quest_index;
-        return questions;
     }
+
+    fclose(src);
+    *questions_count=quest_index;
+    return questions;
 }
 
 void free_questions_memory(Question* questions, int quest_count){
@@ -192,7 +214,12 @@ void free_questions_memory(Question* questions, int quest_count){
     free(questions);
 }
 
-
+Question* resize_questions_container(Question* questions, int* curr_container_size){
+    Question *addr;
+    addr= (Question*)realloc(questions,(*curr_container_size)*2*sizeof(Question));
+    *curr_container_size = (*curr_container_size)*2;
+    return addr;
+}
 
 
 

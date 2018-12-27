@@ -6,3 +6,5 @@ Cine e presedintele LSAC?|D
 A.Burtea|B.Tzava|C.Crispy|D.Roxana Voica
 Cate oscaruri a castigat Leonardo DiCaprio?|B
 A.2|B.1|C.0|D.fara numar
+Cate oua are gasca?|B
+A.2|B.o intrebare proasta|C.cate vrea|D.Alta intrebare
