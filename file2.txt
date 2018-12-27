@@ -1,2 +1,4 @@
 Cat fac 3*3?|A
 A.9|B.5|C.27|D.13
+Cat fac 3*3?|A
+A.9|B.5|C.27|D.13
