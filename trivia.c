@@ -4,10 +4,10 @@
 #include <ncurses.h>
 #include "manager.h"
 #include "utils.h"
+#include "structs.h"
 
 #define INITIAL_QUESTIONS_CONTAINER_SIZE 4
 
-void display_question(Question* question);
 
 int main(int argc, char* argv[]){
 
@@ -52,7 +52,10 @@ int main(int argc, char* argv[]){
         //Question* quest;
         //display_question(quest);
         getch();
-        
+        display_question(questions);
+        getch();
+
+
         endwin();
 
 
@@ -63,13 +66,7 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-void display_question(Question* question){
-    hline('%',COLS);
-    vline('H',LINES);
-    mvvline(0,COLS-1,'H',LINES);
-    mvhline(LINES-1,0,'%',COLS);
-    refresh();
-  }
+
 
 
 

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "utils.h"
+#include "structs.h"
 
 #define BUFMAX 300
 #define ANSWER_BUFF 30
@@ -13,6 +14,7 @@
 
 Question* get_questions(FILE* src,int* questions_count,Question* questions,int *curr_container_size){
    
+  
     char buff_question[BUFMAX];
     char buff_answers[BUFMAX];
 

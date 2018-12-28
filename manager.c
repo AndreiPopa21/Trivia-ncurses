@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "manager.h"
+#include "structs.h"
 
 void splash_screen(){
     
@@ -55,7 +56,7 @@ void splash_screen(){
     refresh();
     napms(42);   
 
-    char copyright[]={"copyright © Popa Stefan"};
+    char copyright[]={"copyright © Popa Stefan-Andrei"};
     move(LINES-3,midX-strlen(copyright)/2);
     for(int i=0;i<strlen(copyright);i++){
         printw("%c",copyright[i]);
@@ -107,3 +108,16 @@ void del_splash_screen(){
     mvprintw(LINES/2,(COLS-strlen(del_mess))/2,del_mess);
     refresh();
 }
+
+void show_start_menu(){
+    
+}
+
+void display_question(Question* question){
+    move(0,0);
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+    refresh();
+  }
