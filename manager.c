@@ -237,6 +237,7 @@ void display_question(Question* question, int index){
     print_question_sentence(stdscr,question->question);
     print_fifty_option(stdscr);
     print_skip_option(stdscr);
+    print_indications(stdscr);
 
    /* ITEM **my_items;
     MENU *my_menu;
