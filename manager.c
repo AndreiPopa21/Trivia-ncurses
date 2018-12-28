@@ -4,15 +4,12 @@
 #include <stdlib.h>
 #include "manager.h"
 
-
 void splash_screen(){
-    //printw("Dimensiunile ecranului sunt: %d| %d\n", LINES,COLS);
-    //mvprintw(LINES-1,COLS-1,"+");
-    //vline("*",1);
-    hline('*',COLS);
-    vline('|',LINES);
-    mvvline(0,COLS-1,'|',LINES);
-    mvhline(LINES-1,0,'*',COLS);
+    
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
     refresh();
 
     char line0[]={"                                  "};
@@ -26,7 +23,6 @@ void splash_screen(){
 
     int midY= LINES/2;
     int midX= COLS/2;
-    //mvprintw(midY,midX,"Hello");
     
     int i;
     int offset = -(midY-LINES/4);
@@ -66,13 +62,11 @@ void splash_screen(){
         refresh();
         napms(42);
     }
-
-    //printw("%s",copyright); 
-    
     
     char press_any_key[]={"- press any key to continue -"};
     int yLoc = midY+ LINES/4;
     nodelay(stdscr,TRUE);
+
     char c;
        while(1){
            c = getch();
@@ -84,7 +78,7 @@ void splash_screen(){
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
         refresh();
-        napms(500);
+        napms(400);
         c = getch();
            if(c>0){  
                nodelay(stdscr,FALSE);
@@ -94,7 +88,22 @@ void splash_screen(){
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
          refresh();
-        napms(500);
+        napms(400);
        }
     
+}
+
+void del_splash_screen(){
+    attroff(A_REVERSE);
+    int i,j;
+    for(i=LINES-1;i>=0;i--){
+        for(j=0;j<COLS;j++){
+            mvprintw(i,j," ");
+        }
+        refresh();
+        napms(42);
+    }
+    char del_mess[]={"Oops! Erased!"};
+    mvprintw(LINES/2,(COLS-strlen(del_mess))/2,del_mess);
+    refresh();
 }

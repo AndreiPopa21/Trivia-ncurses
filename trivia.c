@@ -7,6 +7,8 @@
 
 #define INITIAL_QUESTIONS_CONTAINER_SIZE 4
 
+void display_question(Question* question);
+
 int main(int argc, char* argv[]){
 
     if(argc<2){
@@ -37,20 +39,37 @@ int main(int argc, char* argv[]){
         
         printf("Numarul de intrebari este: %d\n",questions_count);
         display_questions(questions,questions_count);
+
+        initscr();
+        cbreak();   
+        curs_set(0); 
+        noecho();
+    
+        splash_screen();
+        del_splash_screen();    
+        //erase();
+        // printw("Erased");
+        //Question* quest;
+        //display_question(quest);
+        getch();
+        
+        endwin();
+
+
         free_questions_memory(questions,questions_count);
     }
 
-    initscr();
-    cbreak();   
-    curs_set(0); 
-    noecho();
-    
-    splash_screen();
-    //getch();
-    endwin();
     //printf("DOamne\n");
     return 0;
 }
+
+void display_question(Question* question){
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+    refresh();
+  }
 
 
 
