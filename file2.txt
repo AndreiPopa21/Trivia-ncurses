@@ -7,7 +7,11 @@ A.9|B.5|C.27|D.13
 Cand e Sf. Valentin?|A
 A.14 februarie|B.15 martie|C.8 martie|D.20 septembrie
 
-Care e capitala Romanieie?|A
+Care e capitala Romaniei?|A
 A.Bucuresti|B.Brasov|C.Budapeste|D.Chisinau
 
+Pe ce continent e lacul Titicaca?|C
+A.Asia|B.America Centrala|C.America de Sud|D.Africa
 
+Cati metri lungime poate sa aiba Anaconda?|B
+A.8.5|B.10.5|C.9|D.7

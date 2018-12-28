@@ -45,25 +45,23 @@ int main(int argc, char* argv[]){
         curs_set(0); 
         noecho();
     
-        splash_screen();
-        del_splash_screen();
+       // splash_screen();
+        //del_splash_screen();
 
-        GameStat* gameStat=NULL;   
-        show_start_menu(gameStat,0); 
+       // GameStat* gameStat=NULL;   
+       // show_start_menu(gameStat,0); 
         //erase();
         // printw("Erased");
         //Question* quest;
         //display_question(quest);
         //getch();
-        //display_question(questions);
+        display_question(questions+9,1);
         //getch();
-
 
         quit_trivia();
 
         free_questions_memory(questions,questions_count);
     }
-
     return 0;
 }
 

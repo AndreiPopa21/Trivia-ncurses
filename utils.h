@@ -15,4 +15,12 @@ void print_copyrights(WINDOW* wind);
 
 void print_question_mark(WINDOW* wind,int beginY,int beginX);
 
+void print_question_index(WINDOW* wind,int index);
+
+void print_question_sentence(WINDOW* wind, char* question_body);
+
+void print_fifty_option(WINDOW* wind);
+
+void print_skip_option(WINDOW* wind);
+
 #endif

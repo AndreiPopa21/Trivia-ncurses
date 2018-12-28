@@ -7,7 +7,7 @@ void splash_screen();
 
 void del_splash_screen();
 
-void display_question(Question* question);
+void display_question(Question* question, int index);
 
 void show_start_menu(GameStat* gameStat,int canResume);
 

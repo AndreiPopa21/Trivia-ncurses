@@ -58,7 +58,7 @@ void splash_screen(){
     refresh();
     napms(42);   
 
-    char copyright[]={"copyright © Popa Stefan-Andrei"};
+    char copyright[]={"copyrights © Popa Stefan-Andrei"};
     move(LINES-3,midX-strlen(copyright)/2);
     for(int i=0;i<strlen(copyright);i++){
         printw("%c",copyright[i]);
@@ -216,20 +216,178 @@ void show_start_menu(GameStat* gameStat, int canResume){
     wrefresh(my_menu_window);
     delwin(my_menu_window);
     refresh();
-
+    erase();
+    refresh();
+    //getch();
     if(toQuit){
         quit_trivia();
     }
     //getch();
 }
 
-void display_question(Question* question){
+void display_question(Question* question, int index){
     move(0,0);
     hline('%',COLS);
     vline('H',LINES);
     mvvline(0,COLS-1,'H',LINES);
     mvhline(LINES-1,0,'%',COLS);
     refresh();
+    print_copyrights(stdscr);
+    print_question_index(stdscr,index);
+    print_question_sentence(stdscr,question->question);
+    print_fifty_option(stdscr);
+    print_skip_option(stdscr);
+
+   /* ITEM **my_items;
+    MENU *my_menu;
+    WINDOW *my_menu_win;
+    int n_choices=4;
+
+    my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *));
+   // my_items[0]=(ITEM*)NULL;
+    my_items[0]=new_item(question->a_answer,NULL);
+    my_items[1]=new_item(question->b_answer,NULL);
+    my_items[2]=new_item(question->c_answer,NULL);
+    my_items[3]=new_item(question->d_answer,NULL);
+
+  
+
+    my_menu = new_menu((ITEM **)my_items);
+
+   // menu_opts_off(my_menu, O_SHOWDESC);
+
+    my_menu_win = newwin(10,COLS/2+COLS/4,LINES/2,COLS/8);
+    keypad(my_menu_win, TRUE);
+   
+    set_menu_win(my_menu, my_menu_win);
+    WINDOW* subwind = derwin(my_menu_win, 8, COLS/2+COLS/4 -2,1,1);
+    set_menu_sub(my_menu, subwind );
+    
+    set_menu_format(my_menu, 2, 4);
+
+    post_menu(my_menu);
+
+   
+    box(my_menu_win,0,0);
+    box(subwind,0,0);
+    wrefresh(subwind);
+    wrefresh(my_menu_win);
+    refresh();*/
+
+    WINDOW* answers_window;
+
+    int len_a= strlen(question->a_answer);
+    int len_b= strlen(question->b_answer);
+    int len_c= strlen(question->c_answer);
+    int len_d= strlen(question->d_answer);
+
+    int len[4]={len_a,len_b,len_c,len_d};
+
+    int max1= len[0];
+    for(int i=1;i<4;i++){
+        if(len[i]>max1){
+            max1=len[i];
+        }
+    }
+    //printw(1,1,"%d",max1);
+    //printf("%d\n",max1);
+    //refresh();  
+    answers_window=newwin(11,max1+8,LINES/2-LINES/8,(COLS-max1-8)/2);
+    keypad(answers_window,TRUE);
+    int win_x;
+    int win_y;
+    getmaxyx(answers_window,win_y,win_x);
+    //printf("%d | %d\n",win_y,win_x);
+    mvwprintw(answers_window,2,(win_x-len_a)/2,"%s",question->a_answer);
+    mvwprintw(answers_window,4,(win_x-len_b)/2,"%s",question->b_answer);
+    mvwprintw(answers_window,6,(win_x-len_c)/2,"%s",question->c_answer);
+    mvwprintw(answers_window,8,(win_x-len_d)/2,"%s",question->d_answer);
+    wrefresh(answers_window);
+
+    box(answers_window,0,0);
+    wrefresh(answers_window);
+    refresh();
+
+    int curr_selected=0;
+    int breakOut=0;
+    int toHighlight=0;
+    int c;
+    int line=2;
+
+    mvwprintw(answers_window,line,1,"->");
+    wrefresh(answers_window);
+
+    while(!breakOut){
+
+        toHighlight=0;
+        c=wgetch(answers_window);
+        switch(c){
+            case KEY_UP:
+                curr_selected-=1;
+                if(curr_selected<0)
+                    curr_selected+=4;
+                curr_selected=curr_selected%4;
+                //mvprintw(LINES-2,1,"%d",curr_selected);
+                //refresh();
+                toHighlight=1;
+                break;
+            case KEY_DOWN:
+                curr_selected+=1;
+                curr_selected=curr_selected%4;
+                toHighlight=1;
+                //mvprintw(LINES-2,1,"%d",curr_selected);
+                //refresh();
+                break;
+            case 10:
+                breakOut=1;
+                mvprintw(LINES-2,1," Ai selectat: %d",curr_selected+1);
+                refresh();
+                break;
+            case 113:
+                breakOut=1;
+                break;
+            default:
+                break;
+        }
+        mvwprintw(answers_window,line,1,"  ");
+        wrefresh(answers_window);
+        if(toHighlight){
+             switch(curr_selected){
+            case 0:
+                line=2;
+                break;
+            case 1:
+                line =4;
+                break;
+            case 2:
+                line =6;
+                break;
+            case 3:
+                line = 8;
+                break;
+        }
+        mvwprintw(answers_window,line,1,"->");
+        wrefresh(answers_window);
+        }    
+    }
+
+
+   /* int A_POS_X = 2;
+    int A_POS_Y = 2;
+    int B_POS_X= COLS/2+1;
+    int B_POS_Y = 2;
+    int C_POS_X = 2;
+    int C_POS_Y = 4;
+    int D_POS_X = COLS/2+1;
+    int D_POS_Y = 4;
+
+    mvwprintw(answers_window,A_POS_Y,A_POS_X,question->a_answer); 
+    mvwprintw(answers_window,B_POS_Y,B_POS_X,question->b_answer); 
+    mvwprintw(answers_window,C_POS_Y,C_POS_X,question->c_answer); 
+    mvwprintw(answers_window,D_POS_Y,D_POS_X,question->d_answer); */
+
+
+    getch();
 }
 
 void start_new_game(){

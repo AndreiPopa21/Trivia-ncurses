@@ -132,7 +132,46 @@ void print_question_mark(WINDOW* wind,int beginY,int beginX){
 
 void print_copyrights(WINDOW* wind){
 
-    char copyright[]={"copyright © Popa Stefan-Andrei"};
+    char copyright[]={"copyrights © Popa Stefan-Andrei"};
     mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
     refresh();
+}
+
+void print_question_index(WINDOW* wind,int index){
+    wmove(wind,LINES/4-LINES/8,0);
+    clrtoeol();
+    mvwprintw(wind,LINES/4-LINES/8,0,"H");
+    mvwprintw(wind,LINES/4-LINES/8,COLS-1,"H");
+    char quesion_title[]={"Question: "};
+    mvwprintw(wind,LINES/4-LINES/8,(COLS-(strlen(quesion_title)+5))/2,"%s %d/10",quesion_title,index);
+    wrefresh(wind);
+
+}
+
+void print_question_sentence(WINDOW* wind, char* question_body){
+    int line = LINES/4;
+    wmove(wind,line,0);
+    clrtoeol();
+    mvwprintw(wind,line,0,"H");
+    mvwprintw(wind,line,COLS-1,"H");
+    mvwprintw(wind,line,(COLS-strlen(question_body))/2,"%s",question_body);
+    wrefresh(wind);
+}
+
+void print_fifty_option(WINDOW* wind){
+    char press[]={"Press F"};
+    attron(A_BOLD);
+    mvwprintw(wind,LINES/8,COLS/8-2,"50/50");
+    attroff(A_BOLD);
+    mvwprintw(wind,LINES/8+1,COLS/8-strlen(press)/2,"%s",press);
+    wrefresh(wind);
+}
+
+void print_skip_option(WINDOW* wind){
+    char press[]={"Press B"};
+    attron(A_BOLD);
+    mvwprintw(wind,LINES/8,COLS-COLS/8-2,"SKIP");
+    attroff(A_BOLD);
+    mvwprintw(wind,LINES/8+1,COLS-COLS/8-strlen(press)/2,"%s",press);
+    wrefresh(wind);
 }
