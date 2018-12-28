@@ -46,18 +46,20 @@ int main(int argc, char* argv[]){
         noecho();
     
         splash_screen();
-        del_splash_screen();    
+        del_splash_screen();
+
+        GameStat* gameStat=NULL;   
+        show_start_menu(gameStat,0); 
         //erase();
         // printw("Erased");
         //Question* quest;
         //display_question(quest);
-        getch();
-        display_question(questions);
-        getch();
+        //getch();
+        //display_question(questions);
+        //getch();
 
 
         endwin();
-
 
         free_questions_memory(questions,questions_count);
     }

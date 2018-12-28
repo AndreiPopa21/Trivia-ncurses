@@ -5,7 +5,14 @@
 
 void splash_screen();
 void del_splash_screen();
-void show_start_menu();
 void display_question(Question* question);
+
+void print_copyrights(WINDOW* wind);
+
+void show_start_menu(GameStat* gameStat,int canResume);
+
+void start_new_game();
+void resume_game(GameStat* gameStat);
+void quit_trivia();
 
 #endif
