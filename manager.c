@@ -230,8 +230,7 @@ void display_question(Question* question){
     mvvline(0,COLS-1,'H',LINES);
     mvhline(LINES-1,0,'%',COLS);
     refresh();
-  }
-
+}
 
 void start_new_game(){
     char start_game_mess[]={"You pressed start game"};
@@ -255,9 +254,3 @@ void quit_trivia(){
     endwin();
 }
 
-void print_copyrights(WINDOW* wind){
-
-    char copyright[]={"copyright © Popa Stefan-Andrei"};
-    mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
-    refresh();
-}

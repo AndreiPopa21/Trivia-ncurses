@@ -11,6 +11,8 @@ Question* resize_questions_container(Question* questions, int* curr_container_si
 
 void display_questions(Question* questions,int questions_count);
 
+void print_copyrights(WINDOW* wind);
+
 void print_question_mark(WINDOW* wind,int beginY,int beginX);
 
 #endif

@@ -101,6 +101,7 @@ void display_questions(Question* questions, int questions_count){
 }
 
 void print_question_mark(WINDOW* wind,int beginY,int beginX){
+
     wmove(wind,beginY,beginX);
     wprintw(wind,"  _______   \n");
     wmove(wind,beginY+1,beginX);
@@ -127,4 +128,11 @@ void print_question_mark(WINDOW* wind,int beginY,int beginX){
     wprintw(wind,"           \n");
     wmove(wind,beginY+12,beginX);
     wprintw(wind,"    O      \n");
+}
+
+void print_copyrights(WINDOW* wind){
+
+    char copyright[]={"copyright © Popa Stefan-Andrei"};
+    mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
+    refresh();
 }
