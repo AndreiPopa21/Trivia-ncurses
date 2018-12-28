@@ -59,7 +59,7 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
                         break;
                 }
             }
-        
+            fgets(buff_question,BUFMAX,src);
             quest_index++;
     }
 
