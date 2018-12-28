@@ -4,3 +4,4 @@ Cat fac 3*3?|A
 A.9|B.5|C.27|D.13
 Cand e Sf. Valentin?|A
 A.14 februarie|B.15 martie|C.8 martie|D.20 septembrie
+

@@ -17,7 +17,7 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
     char buff_answers[BUFMAX];
 
     int quest_index = *questions_count;
-    while(fgets(buff_question,BUFMAX,src)!=NULL){
+    while(fgets(buff_question,BUFMAX,src)!=NULL && fgets(buff_answers,BUFMAX,src)!=NULL){
 
 
             if(quest_index>=(*curr_container_size)){
@@ -37,7 +37,7 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
             questions[quest_index].right_answer=(char*) malloc(RIGHT_ANSWER_BUFF*sizeof(char));
             strcpy(questions[quest_index].right_answer,token);
 
-            fgets(buff_answers,BUFMAX,src);
+            
             
             token=strtok(buff_answers, "|\n");
             questions[quest_index].a_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
