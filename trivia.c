@@ -59,12 +59,11 @@ int main(int argc, char* argv[]){
         //getch();
 
 
-        endwin();
+        quit_trivia();
 
         free_questions_memory(questions,questions_count);
     }
 
-    //printf("DOamne\n");
     return 0;
 }
 

@@ -99,3 +99,32 @@ void display_questions(Question* questions, int questions_count){
            printf("%s\n",questions[i].d_answer);
         }
 }
+
+void print_question_mark(WINDOW* wind,int beginY,int beginX){
+    wmove(wind,beginY,beginX);
+    wprintw(wind,"  _______   \n");
+    wmove(wind,beginY+1,beginX);
+    wprintw(wind," / _____ \\ \n");
+    wmove(wind,beginY+2,beginX);
+    wprintw(wind,"/_/     \\ \\ \n");
+    wmove(wind,beginY+3,beginX);
+    wprintw(wind,"        | | \n");
+    wmove(wind,beginY+4,beginX);
+    wprintw(wind,"       / /  \n");
+    wmove(wind,beginY+5,beginX);
+    wprintw(wind,"      / /   \n");
+    wmove(wind,beginY+6,beginX);
+    wprintw(wind,"     / /   \n");
+    wmove(wind,beginY+7,beginX);
+    wprintw(wind,"    / /    \n");
+    wmove(wind,beginY+8,beginX);
+    wprintw(wind,"   / /     \n");
+    wmove(wind,beginY+9,beginX);
+    wprintw(wind,"   | |     \n");
+    wmove(wind,beginY+10,beginX);
+    wprintw(wind,"   |_|     \n");
+    wmove(wind,beginY+11,beginX);
+    wprintw(wind,"           \n");
+    wmove(wind,beginY+12,beginX);
+    wprintw(wind,"    O      \n");
+}

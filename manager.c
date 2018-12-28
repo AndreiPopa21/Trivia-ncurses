@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "manager.h"
 #include "structs.h"
+#include "utils.h"
 #include <menu.h>
 
 void splash_screen(){
@@ -122,6 +123,10 @@ void show_start_menu(GameStat* gameStat, int canResume){
     mvprintw(2,(COLS-strlen(welcome_text))/2,"%s",welcome_text);
     refresh();
 
+    wmove(stdscr,LINES/4,COLS/2);
+    print_question_mark(stdscr,3,3);
+    print_question_mark(stdscr,3,COLS-15);
+
     print_copyrights(stdscr);
 
     ITEM **my_items;
@@ -141,6 +146,10 @@ void show_start_menu(GameStat* gameStat, int canResume){
     for(i=0;i<n_choices;++i){
         my_items[i]=new_item(choices[i],NULL);
     }
+    set_item_userptr(my_items[0],start_new_game);
+    set_item_userptr(my_items[1],resume_game);
+    set_item_userptr(my_items[2],quit_trivia);
+
     my_items[n_choices]=(ITEM*)NULL;
     myMenu=new_menu((ITEM**)my_items);
 
@@ -157,21 +166,38 @@ void show_start_menu(GameStat* gameStat, int canResume){
     int break_out=false;
     
     int c;
+    int toQuit=0;
+
     while(!break_out)
 	{   
         c = wgetch(my_menu_window);    
         switch(c)
-	        {	case KEY_DOWN:
+	        {	
+            case KEY_DOWN:
 				menu_driver(myMenu, REQ_DOWN_ITEM);
 				break;
+
 			case KEY_UP:
 				menu_driver(myMenu, REQ_UP_ITEM);
 				break;
+
 			case 10:
-				//mvprintw(LINES-2,1,"BUNAA\n");
-				//refresh();
                 break_out=true;
+                ITEM* cur = current_item(myMenu);
+                int curr_item_index = item_index(cur);
+                switch(curr_item_index){
+                    case 0:
+                        start_new_game();
+                        break;
+                    case 1:
+                        resume_game(NULL);
+                        break;
+                    case 2:
+                        toQuit=true;
+                        break;
+                }
 				break;
+
             case KEY_F(1):
                 break_out=true;
                 break;
@@ -189,8 +215,12 @@ void show_start_menu(GameStat* gameStat, int canResume){
     wborder(my_menu_window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
     wrefresh(my_menu_window);
     delwin(my_menu_window);
-    //refresh();
-    getch();
+    refresh();
+
+    if(toQuit){
+        quit_trivia();
+    }
+    //getch();
 }
 
 void display_question(Question* question){
@@ -202,16 +232,27 @@ void display_question(Question* question){
     refresh();
   }
 
-void start_new_game(){
 
+void start_new_game(){
+    char start_game_mess[]={"You pressed start game"};
+    move(LINES-4,0);
+    clrtoeol();
+    mvprintw(LINES-4,(COLS-strlen(start_game_mess))/2,"%s",start_game_mess);
+    refresh();
+    getch();
 }
 
 void resume_game(GameStat* gameStat){
-
+    char resume_game_mess[]={"You pressed resume game"};
+    move(LINES-4,0);
+    clrtoeol();
+    mvprintw(LINES-4,(COLS-strlen(resume_game_mess))/2,"%s",resume_game_mess);
+    refresh();
+    getch();
 }
 
 void quit_trivia(){
-
+    endwin();
 }
 
 void print_copyrights(WINDOW* wind){
