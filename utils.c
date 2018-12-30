@@ -181,3 +181,4 @@ void print_indications(WINDOW* wind){
     mvwprintw(wind,7*LINES/8,(COLS-strlen(indic))/2,"%s",indic);
     wrefresh(wind);
 }
+

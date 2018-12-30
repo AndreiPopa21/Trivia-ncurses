@@ -17,4 +17,15 @@ void resume_game(GameStat* gameStat);
 
 void quit_trivia();
 
+//////MODULAR NEW
+
+//functia trebuie sa primeasca un GameStat care are isGameFinished=false
+void start_menu(GameStat gameStat);
+
+GameStat game_session(GameStat gameStat);
+
+GameStat show_question(GameStat gameStat);
+
+void show_score(GameStat gameStat);
+
 #endif

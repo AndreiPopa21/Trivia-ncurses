@@ -23,4 +23,10 @@ void print_fifty_option(WINDOW* wind);
 
 void print_skip_option(WINDOW* wind);
 
+void print_indications(WINDOW* wind);
+
+///MODULAR - NEW 
+
+Question* pickRandomSet(Question* all_questions,Question* random_set,GameStat gameStat);
+
 #endif

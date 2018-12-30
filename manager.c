@@ -110,7 +110,7 @@ void del_splash_screen(){
    // mvprintw(LINES/2,(COLS-strlen(del_mess))/2,del_mess);
     refresh();
 }
-
+/*
 void show_start_menu(GameStat* gameStat, int canResume){
 
     char* choices[]={
@@ -224,8 +224,9 @@ void show_start_menu(GameStat* gameStat, int canResume){
     }
     //getch();
 }
-
+/*
 void display_question(Question* question, int index){
+
     move(0,0);
     hline('%',COLS);
     vline('H',LINES);
@@ -239,41 +240,6 @@ void display_question(Question* question, int index){
     print_skip_option(stdscr);
     print_indications(stdscr);
 
-   /* ITEM **my_items;
-    MENU *my_menu;
-    WINDOW *my_menu_win;
-    int n_choices=4;
-
-    my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *));
-   // my_items[0]=(ITEM*)NULL;
-    my_items[0]=new_item(question->a_answer,NULL);
-    my_items[1]=new_item(question->b_answer,NULL);
-    my_items[2]=new_item(question->c_answer,NULL);
-    my_items[3]=new_item(question->d_answer,NULL);
-
-  
-
-    my_menu = new_menu((ITEM **)my_items);
-
-   // menu_opts_off(my_menu, O_SHOWDESC);
-
-    my_menu_win = newwin(10,COLS/2+COLS/4,LINES/2,COLS/8);
-    keypad(my_menu_win, TRUE);
-   
-    set_menu_win(my_menu, my_menu_win);
-    WINDOW* subwind = derwin(my_menu_win, 8, COLS/2+COLS/4 -2,1,1);
-    set_menu_sub(my_menu, subwind );
-    
-    set_menu_format(my_menu, 2, 4);
-
-    post_menu(my_menu);
-
-   
-    box(my_menu_win,0,0);
-    box(subwind,0,0);
-    wrefresh(subwind);
-    wrefresh(my_menu_win);
-    refresh();*/
 
     WINDOW* answers_window;
 
@@ -290,15 +256,13 @@ void display_question(Question* question, int index){
             max1=len[i];
         }
     }
-    //printw(1,1,"%d",max1);
-    //printf("%d\n",max1);
-    //refresh();  
+    
     answers_window=newwin(11,max1+8,LINES/2-LINES/8,(COLS-max1-8)/2);
     keypad(answers_window,TRUE);
     int win_x;
     int win_y;
     getmaxyx(answers_window,win_y,win_x);
-    //printf("%d | %d\n",win_y,win_x);
+    
     mvwprintw(answers_window,2,(win_x-len_a)/2,"%s",question->a_answer);
     mvwprintw(answers_window,4,(win_x-len_b)/2,"%s",question->b_answer);
     mvwprintw(answers_window,6,(win_x-len_c)/2,"%s",question->c_answer);
@@ -372,25 +336,9 @@ void display_question(Question* question, int index){
         }    
     }
 
-
-   /* int A_POS_X = 2;
-    int A_POS_Y = 2;
-    int B_POS_X= COLS/2+1;
-    int B_POS_Y = 2;
-    int C_POS_X = 2;
-    int C_POS_Y = 4;
-    int D_POS_X = COLS/2+1;
-    int D_POS_Y = 4;
-
-    mvwprintw(answers_window,A_POS_Y,A_POS_X,question->a_answer); 
-    mvwprintw(answers_window,B_POS_Y,B_POS_X,question->b_answer); 
-    mvwprintw(answers_window,C_POS_Y,C_POS_X,question->c_answer); 
-    mvwprintw(answers_window,D_POS_Y,D_POS_X,question->d_answer); */
-
-
     getch();
 }
-
+*/
 void start_new_game(){
     char start_game_mess[]={"You pressed start game"};
     move(LINES-4,0);
@@ -411,5 +359,9 @@ void resume_game(GameStat* gameStat){
 
 void quit_trivia(){
     endwin();
+}
+
+void start_menu(GameStat gameStat){
+
 }
 

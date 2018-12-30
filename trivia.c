@@ -55,7 +55,7 @@ int main(int argc, char* argv[]){
         //Question* quest;
         //display_question(quest);
         //getch();
-        display_question(questions+7,3);
+        //display_question(questions+7,3);
         //getch();
 
         quit_trivia();

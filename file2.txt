@@ -1,9 +1,6 @@
 Cat fac 3*3?|A
 A.9|B.5|C.27|D.13
 
-Cat fac 3*3?|A
-A.9|B.5|C.27|D.13
-
 Cand e Sf. Valentin?|A
 A.14 februarie|B.15 martie|C.8 martie|D.20 septembrie
 
@@ -15,3 +12,18 @@ A.Asia|B.America Centrala|C.America de Sud|D.Africa
 
 Cati metri lungime poate sa aiba Anaconda?|B
 A.8.5|B.10.5|C.9|D.7
+
+Cand a capitulat Germania?|A
+A.7 mai 1945|B.6 iunie 1944|C.31 august 1945|D.23 august 1944
+
+Cine a castigat WC 2018?|D
+A.Germania|B.Italia|C.Argentina|D.Franta
+
+Cate titluri mondiale detine Franta?|B
+A.3|B.2|C.1|D.0
+
+Cand a izbucnit Primul Razboi Mondial?|C
+A.1912|B.1913|C.1914|D.1915
+
+Cate grade a avut cutremurul din 1977?|A
+A. 7,4|B. 8,5|C. 6,3|D. 9,0
