@@ -47,38 +47,13 @@ int main(int argc, char* argv[]){
         curs_set(0); 
         noecho();
 
-        //GameStat gameStat = initializeGameStat();
-        //gameStat=start_menu(gameStat,questions,questions_count);
-        /*
-        shuffleQuestions(questions,questions_count,gameStat);
-        Question* random_set = (Question*)malloc(gameStat.questions_count*sizeof(Question));
-        for(int i=0;i<gameStat.questions_count;i++){
-            random_set[i]=questions[i];
-        }*/
-        //display_questions(random_set,gameStat.questions_count);
-        //start_menu(gameStat,questions,questions_count);
-
         splash_screen();
         del_splash_screen();
 
-        //GameStat* gameStat=NULL;   
-        //show_start_menu(gameStat,0); 
-        //erase();
-
-
-
-        GameStat gameStat= customizeGameStat();
-        gameStat.random_set=questions+3;
-        //gameStat = game_session(gameStat);
+        GameStat gameStat;
         gameStat = start_menu(gameStat,questions,questions_count);
-        //show_question(gameStat);
-        //show_score(gameStat);
+  
         quit_trivia();
-        //printf("Gata\n");
-
-
-        //printf("Cate intrebari: %d\n",gameStat.questions_count);
-        //display_questions(gameStat.random_set,gameStat.questions_count);
 
         free_questions_memory(questions,questions_count);
     }

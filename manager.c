@@ -106,8 +106,7 @@ void del_splash_screen(){
         refresh();
         napms(42);
     }
-   // char del_mess[]={"Oops! Erased!"};
-   // mvprintw(LINES/2,(COLS-strlen(del_mess))/2,del_mess);
+
     refresh();
 }
 
@@ -300,9 +299,6 @@ GameStat game_session(GameStat gameStat){
     }
     int maxIndex = gameStat.questions_count;
     int i=0;
-    
-    //endwin();
-    //printf("HDHDH %d\n",maxIndex);
 
     for(i=startIndex;i<=maxIndex && !gameStat.toResume; ){
            
@@ -315,17 +311,11 @@ GameStat game_session(GameStat gameStat){
                 if(gameStat.skipping){
                     gameStat.skipping=0;
                     gameStat.curr_question_index+=1;
-                    /*mvprintw(LINES/2+2,2,"H");
-                    refresh();
-                    getch();*/
-                    // gameStat.curr_nav_position=0;
+                
                  }else{
                     gameStat.curr_question_index+=1;
                     gameStat.fiftyEncoded = 0;
-                    //gameStat.curr_nav_position = 0;
-                    /*mvprintw(LINES/2+2,2,"%d",i);
-                    refresh();
-                    getch();*/
+                 
                     i++;
                 }
             }
@@ -338,13 +328,12 @@ GameStat game_session(GameStat gameStat){
     }
 
     if(gameStat.isGameFinished){
-       // printf("The game has finished!\n");
         show_score(gameStat);
     }
-    //show_score(gameStat);
     return gameStat;
 
 }
+
 GameStat show_question(GameStat gameStat,int i){
 
     clear();
@@ -429,7 +418,7 @@ GameStat show_question(GameStat gameStat,int i){
     int c;
     int breakOut = 0;
     while(!breakOut){
-        //implementeaza navigatia
+       
         c=wgetch(answers_window);
         switch(c){
             case KEY_UP:
@@ -451,20 +440,15 @@ GameStat show_question(GameStat gameStat,int i){
                     gameStat.wrong_answers+=1;
                 }
                 gameStat.curr_nav_position=0;
-                /*mvprintw(LINES-2,1," Ai selectat: %d",navigation_map[gameStat.curr_nav_position]);
-                refresh();
-                getch();*/
+               
                 break;
 
             case 102:
                 if(!gameStat.didFifty){
                     gameStat.didFifty=1;
-                    //mvprintw(LINES-2,1," Ai selectat 50/50");
                     
                     unprint_fifty_option(stdscr);
                     gameStat = useFifty(gameStat,curr_question,navigation_map,show_options_map);
-                  
-                    //mvprintw(LINES/2,5,"%d",gameStat.fiftyEncoded);
                   
                     wclear(answers_window);
                     box(answers_window,0,0);
@@ -482,7 +466,6 @@ GameStat show_question(GameStat gameStat,int i){
                     gameStat.fiftyEncoded=0;
                     gameStat.curr_nav_position=0;
                     unprint_skip_option(stdscr);
-                    //mvprintw(LINES-2,1," Ai selectat skip   ");
                     refresh();
                     breakOut=1;
                 }
@@ -490,7 +473,6 @@ GameStat show_question(GameStat gameStat,int i){
 
             case 113:
                 breakOut=1;
-                //////////mai ramane de lucrat
                 gameStat.toResume=1;
                 gameStat.curr_nav_position=0;
                 break;
@@ -499,7 +481,6 @@ GameStat show_question(GameStat gameStat,int i){
                 break;
         }
     }
-    //getch();
     wclear(answers_window);
     clear();
     refresh();
@@ -507,6 +488,7 @@ GameStat show_question(GameStat gameStat,int i){
 
     return gameStat;
 }
+
 void show_score(GameStat gameStat){
 
     move(0,0);
