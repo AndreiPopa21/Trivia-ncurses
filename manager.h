@@ -20,11 +20,11 @@ void quit_trivia();
 //////MODULAR NEW
 
 //functia trebuie sa primeasca un GameStat care are isGameFinished=false
-void start_menu(GameStat gameStat);
+GameStat start_menu(GameStat gameStat, Question* all_questions, int q_total_count);
 
 GameStat game_session(GameStat gameStat);
 
-GameStat show_question(GameStat gameStat);
+GameStat show_question(GameStat gameStat,int i);
 
 void show_score(GameStat gameStat);
 
