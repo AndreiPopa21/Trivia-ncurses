@@ -12,6 +12,7 @@ GameStat customizeGameStat();
 
 int main(int argc, char* argv[]){
 
+    
     if(argc<2){
         fprintf(stderr,"Nu s-au dat argumente in linia de comanda\n");
         return 1;   
