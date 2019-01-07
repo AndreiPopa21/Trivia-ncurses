@@ -1,9 +1,10 @@
-run: trivia.c
-	gcc trivia.c manager.c utils.c -lmenu -lncurses -o trivia
-	./trivia file1.txt file2.txt
+build: trivia
 
-build: trivia.c
-	gcc trivia.c manager.c utils.c -lmenu -lncurses -o trivia
+trivia: trivia.c manager.c utils.c
+	gcc -g $^ -lmenu -lncurses -o $@
+
+run: trivia
+	./trivia file1.txt file2.txt
 
 clean: 
 	rm -f trivia

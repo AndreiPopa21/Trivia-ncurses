@@ -134,6 +134,13 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
 
     int quitGame=0;
     while(!quitGame){
+
+        clear();
+        move(0,0);
+        hline('%',COLS);
+        vline('H',LINES);
+        mvvline(0,COLS-1,'H',LINES);
+        mvhline(LINES-1,0,'%',COLS);
         
         int breakOut = 0;
         int createNewGame = 0;
@@ -248,6 +255,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         for(i = 0; i < n_choices; ++i){
             free_item(my_items[i]);
         }
+        //free(my_items);
         free_menu(myMenu);
         wborder(my_menu_window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
         wrefresh(my_menu_window);
@@ -289,11 +297,6 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                 } //else an Options screen could be implemented
             }
         }
-        /*if(gameStat.isGameFinished){
-            free(gameStat.random_set);
-            gameStat.random_set=NULL;
-        }*/
-        //getch();
     }
     return gameStat;
    // getch();

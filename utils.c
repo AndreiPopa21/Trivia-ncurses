@@ -64,7 +64,6 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
             quest_index++;
     }
 
-    fclose(src);
     *questions_count=quest_index;
     return questions;
 }
@@ -102,31 +101,31 @@ void display_questions(Question* questions, int questions_count){
 void print_question_mark(WINDOW* wind,int beginY,int beginX){
 
     wmove(wind,beginY,beginX);
-    wprintw(wind,"  _______   \n");
+    wprintw(wind,"  _______   ");
     wmove(wind,beginY+1,beginX);
-    wprintw(wind," / _____ \\ \n");
+    wprintw(wind," / _____ \\ ");
     wmove(wind,beginY+2,beginX);
-    wprintw(wind,"/_/     \\ \\ \n");
+    wprintw(wind,"/_/     \\ \\ ");
     wmove(wind,beginY+3,beginX);
-    wprintw(wind,"        | | \n");
+    wprintw(wind,"        | | ");
     wmove(wind,beginY+4,beginX);
-    wprintw(wind,"       / /  \n");
+    wprintw(wind,"       / /  ");
     wmove(wind,beginY+5,beginX);
-    wprintw(wind,"      / /   \n");
+    wprintw(wind,"      / /   ");
     wmove(wind,beginY+6,beginX);
-    wprintw(wind,"     / /   \n");
+    wprintw(wind,"     / /   ");
     wmove(wind,beginY+7,beginX);
-    wprintw(wind,"    / /    \n");
+    wprintw(wind,"    / /    ");
     wmove(wind,beginY+8,beginX);
-    wprintw(wind,"   / /     \n");
+    wprintw(wind,"   / /     ");
     wmove(wind,beginY+9,beginX);
-    wprintw(wind,"   | |     \n");
+    wprintw(wind,"   | |     ");
     wmove(wind,beginY+10,beginX);
-    wprintw(wind,"   |_|     \n");
+    wprintw(wind,"   |_|     ");
     wmove(wind,beginY+11,beginX);
-    wprintw(wind,"           \n");
+    wprintw(wind,"           ");
     wmove(wind,beginY+12,beginX);
-    wprintw(wind,"    O      \n");
+    wprintw(wind,"    O      ");
 }
 
 void print_copyrights(WINDOW* wind){
