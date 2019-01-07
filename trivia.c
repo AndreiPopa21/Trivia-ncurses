@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include <time.h>
 #include "manager.h"
 #include "utils.h"
 #include "structs.h"
@@ -15,6 +16,15 @@ int main(int argc, char* argv[]){
     
     if(argc<2){
         fprintf(stderr,"Nu s-au dat argumente in linia de comanda\n");
+
+        time_t rawtime;
+        struct tm * timeinfo;
+
+        time ( &rawtime );
+        timeinfo = localtime ( &rawtime );
+        printf ( "Current local time and date: %d/%d/%d\n", timeinfo->tm_mday,timeinfo->tm_mon+1,timeinfo->tm_year+1900);
+
+        exit(1);
         return 1;   
     }else{
         fprintf(stdout,"Ai dat suficiente argumente\n");
@@ -39,7 +49,7 @@ int main(int argc, char* argv[]){
             }
         }
         
-        printf("Numarul de intrebari este: %d\n",questions_count);
+       // printf("Numarul de intrebari este: %d\n",questions_count);
         //display_questions(questions,questions_count);
 
         
@@ -51,7 +61,7 @@ int main(int argc, char* argv[]){
         splash_screen();
         del_splash_screen();
 
-        GameStat gameStat;
+        GameStat gameStat=initializeGameStat();
         gameStat = start_menu(gameStat,questions,questions_count);
   
         quit_trivia();

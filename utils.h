@@ -41,7 +41,15 @@ void print_sad_score(WINDOW* wind, GameStat gameStat);
 
 void print_points(WINDOW* wind, GameStat gameStat,int y, int x);
 
+void refresh_local_hour_date();
+
+void refresh_current_score(GameStat gameStat);
+
 int get_right_answer_index(Question* question);
+
+void print_no_game_to_resume();
+
+void unprint_no_game_to_resume();
 
 ///MODULAR - NEW 
 

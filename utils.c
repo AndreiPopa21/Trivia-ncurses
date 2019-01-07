@@ -25,9 +25,9 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
 
             if(quest_index>=(*curr_container_size)){
                 questions= resize_questions_container(questions,curr_container_size);
-                printf("S-a marit containerul\n");
+                //printf("S-a marit containerul\n");
             }
-            printf("The curr size: %d | The occupied size: %d \n",(*curr_container_size),quest_index+1);
+            //printf("The curr size: %d | The occupied size: %d \n",(*curr_container_size),quest_index+1);
 
             char* token=strtok(buff_question, "|\n");
            
@@ -162,32 +162,32 @@ void print_question_sentence(WINDOW* wind, char* question_body){
 void print_fifty_option(WINDOW* wind){
     char press[]={"Press F"};
     attron(A_BOLD);
-    mvwprintw(wind,LINES/8,COLS/8-2,"50/50");
+    mvwprintw(wind,LINES/2,COLS/8-2,"50/50");
     attroff(A_BOLD);
-    mvwprintw(wind,LINES/8+1,COLS/8-strlen(press)/2,"%s",press);
+    mvwprintw(wind,LINES/2+1,COLS/8-strlen(press)/2,"%s",press);
     wrefresh(wind);
 }
 
 void unprint_fifty_option(WINDOW* wind){
     char press[]={"       "};
-    mvwprintw(wind,LINES/8+1,COLS/8-strlen(press)/2,"       ");
-    mvwprintw(wind,LINES/8,COLS/8-2,"     ");
+    mvwprintw(wind,LINES/2+1,COLS/8-strlen(press)/2,"       ");
+    mvwprintw(wind,LINES/2,COLS/8-2,"     ");
     wrefresh(wind);
 }
 
 void print_skip_option(WINDOW* wind){
     char press[]={"Press B"};
     attron(A_BOLD);
-    mvwprintw(wind,LINES/8,COLS-COLS/8-2,"SKIP");
+    mvwprintw(wind,LINES/2,COLS-COLS/8-2,"SKIP");
     attroff(A_BOLD);
-    mvwprintw(wind,LINES/8+1,COLS-COLS/8-strlen(press)/2,"%s",press);
+    mvwprintw(wind,LINES/2+1,COLS-COLS/8-strlen(press)/2,"%s",press);
     wrefresh(wind);
 }
 
 void unprint_skip_option(WINDOW* wind){
     char press[]={"       "};
-    mvwprintw(wind,LINES/8+1,COLS-COLS/8-strlen(press)/2,"%s",press);
-    mvwprintw(wind,LINES/8,COLS-COLS/8-2,"    ");
+    mvwprintw(wind,LINES/2+1,COLS-COLS/8-strlen(press)/2,"%s",press);
+    mvwprintw(wind,LINES/2,COLS-COLS/8-2,"    ");
     wrefresh(stdscr);
 }
 
@@ -290,6 +290,58 @@ void print_sad_score(WINDOW* wind, GameStat gameStat){
     wrefresh(wind);
 }
 
+void print_no_game_to_resume(){
+    char message[]={"There is no game to be resume"};
+    mvprintw(LINES-4,(COLS-strlen(message))/2,"%s",message);
+    refresh();
+}
+
+void unprint_no_game_to_resume(){
+    char message[]={"                             "};
+    mvprintw(LINES-4,(COLS-strlen(message))/2,"%s",message);
+    refresh();
+}
+
+void refresh_local_hour_date(){
+
+    mvprintw(LINES/8,COLS-COLS/8-2,"         ");
+    refresh();
+
+
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    if(timeinfo->tm_hour < 10){
+        mvprintw(LINES/8,COLS-COLS/8-2,"0%d:",timeinfo->tm_hour);
+        refresh();
+    }else{
+        mvprintw(LINES/8,COLS-COLS/8-2,"%d:",timeinfo->tm_hour);
+        refresh();
+    }
+    
+    if(timeinfo->tm_min < 10){
+        mvprintw(LINES/8,COLS-COLS/8+1,"0%d:",timeinfo->tm_min);
+        refresh();
+    }else{
+        mvprintw(LINES/8,COLS-COLS/8+1,"%d:",timeinfo->tm_min);
+        refresh();
+    }
+
+    if(timeinfo->tm_sec < 10){
+        mvprintw(LINES/8,COLS-COLS/8+4,"0%d",timeinfo->tm_sec);
+        refresh();
+    }else{
+        mvprintw(LINES/8,COLS-COLS/8+4,"%d",timeinfo->tm_sec);
+        refresh();
+    }
+    mvprintw(LINES/8+1,COLS-COLS/8-2,"          ");
+    mvprintw(LINES/8+1,COLS-COLS/8-2,"%d/%d/%d\n", timeinfo->tm_mday,timeinfo->tm_mon+1,timeinfo->tm_year+1900);
+    mvprintw(LINES/8+1,COLS-1,"%s","H");
+    refresh();
+}
+
 void print_points(WINDOW* wind, GameStat gameStat,int y, int x){
 
     char right_mess[]={"Right answers: ............ "};
@@ -335,7 +387,7 @@ GameStat initializeGameStat(){
 
     GameStat gameStat;
     gameStat.random_set = NULL;
-    gameStat.questions_count = 5;
+    gameStat.questions_count = 10;
     gameStat.curr_question_index = 1;
     gameStat.curr_nav_position = 0;
     gameStat.wrong_answers = 0;
@@ -531,4 +583,11 @@ int get_right_answer_index(Question* question){
             break;
     }   return right_answer_index;
 
+}
+
+void refresh_current_score(GameStat gameStat){
+    int curr_score = 10 * gameStat.right_answers + (-5)*gameStat.wrong_answers;
+    char score_mess[]={"Score: "};
+    mvprintw(LINES/8,COLS/8-2,"%s%d",score_mess,curr_score);
+    refresh();
 }

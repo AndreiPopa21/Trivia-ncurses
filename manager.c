@@ -150,11 +150,12 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         char* choices[]={
                 "New Game",
                 "Resume Game",
+                "How to play",
                 "Quit",
             };
         ITEM **my_items;
         MENU *myMenu;
-        int n_choices=3;
+        int n_choices=4;
         ITEM* curr_item;
         WINDOW* my_menu_window;
         int width=26;
@@ -193,6 +194,8 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                     breakOut=0;
                     ITEM* cur = current_item(myMenu);
                     int curr_item_index = item_index(cur);
+                    unprint_no_game_to_resume();
+
                     switch(curr_item_index){
                         case 0:
                             breakOut=1;
@@ -207,12 +210,13 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                                 refresh();
                                 breakOut=1;
                             }else{
-                                mvprintw(LINES/2,2,"create first!!");
-                                refresh();
+                               // mvprintw(LINES/2,2,"create first!!");
+                                //refresh();
+                                print_no_game_to_resume();
                             }
                             break;
 
-                        case 2:
+                        case 3:
                             mvprintw(LINES/2,2,"Quit");
                             refresh();
                             breakOut=1;
@@ -229,7 +233,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                     break;
 	        }
         }	
-        //getch();
+        
         unpost_menu(myMenu);
    
         for(i = 0; i < n_choices; ++i){
@@ -242,9 +246,6 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         refresh();
         erase();
         refresh();
-
-        //quitGame=1;
-        //getch();
         
         if(quitGame){
             // printf("You chose to quit the game\n");
@@ -263,17 +264,10 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                     session_questions[i]=all_questions[i];
                 }
                 gameStat.random_set=session_questions;
-                /*endwin();
-                printf("DAAA %d\n",gameStat.curr_question_index);
-                return;
-                /*for(int j=0;j<=gameStat.questions_count;j++){
-                    printf("%s\n",(gameStat.random_set+j)->question);
-                }return ;*/
-                //return gameStat;
+                
                 gameStat=game_session(gameStat);
-                //printf("A new game is being created...\n");
-               
-                //gameStat = game_session (gameStat);
+
+                free(session_questions);
 
             }else{
                 if(gameStat.toResume){
@@ -388,6 +382,9 @@ GameStat show_question(GameStat gameStat,int i){
         }
     }
    
+    refresh_current_score(gameStat);
+    refresh_local_hour_date(stdscr);
+
     WINDOW* answers_window;
 
     int len_a= strlen(curr_question->a_answer);
@@ -475,6 +472,10 @@ GameStat show_question(GameStat gameStat,int i){
                 breakOut=1;
                 gameStat.toResume=1;
                 gameStat.curr_nav_position=0;
+                break;
+
+            case 114:
+                refresh_local_hour_date();
                 break;
 
             default:
