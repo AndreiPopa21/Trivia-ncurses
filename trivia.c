@@ -17,13 +17,6 @@ int main(int argc, char* argv[]){
     if(argc<2){
         fprintf(stderr,"Nu s-au dat argumente in linia de comanda\n");
 
-        time_t rawtime;
-        struct tm * timeinfo;
-
-        time ( &rawtime );
-        timeinfo = localtime ( &rawtime );
-        printf ( "Current local time and date: %d/%d/%d\n", timeinfo->tm_mday,timeinfo->tm_mon+1,timeinfo->tm_year+1900);
-
         exit(1);
         return 1;   
     }else{
@@ -63,6 +56,11 @@ int main(int argc, char* argv[]){
 
         GameStat gameStat=initializeGameStat();
         gameStat = start_menu(gameStat,questions,questions_count);
+        
+        /*if(gameStat.random_set!=NULL){
+            free(gameStat.random_set);
+            gameStat.random_set=NULL;
+        }*/
   
         quit_trivia();
 

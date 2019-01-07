@@ -15,7 +15,7 @@ void splash_screen(){
     mvhline(LINES-1,0,'%',COLS);
     refresh();
 
-    char line0[]={"                                  "};
+    //char line0[]={"                                  "};
     char line1[]={"MMMMMMMMMM         O            O         "};
     char line2[]={"    HH    MMMMM                     ####  "};
     char line3[]={"    HH    H    H   H V       V  H  I    I "};
@@ -60,7 +60,7 @@ void splash_screen(){
 
     char copyright[]={"copyrights © Popa Stefan-Andrei"};
     move(LINES-3,midX-strlen(copyright)/2);
-    for(int i=0;i<strlen(copyright);i++){
+    for( i=0;i<strlen(copyright);i++){
         printw("%c",copyright[i]);
         refresh();
         napms(42);
@@ -71,29 +71,28 @@ void splash_screen(){
     nodelay(stdscr,TRUE);
 
     char c;
-       while(1){
-           c = getch();
-           if(c>0){
-               nodelay(stdscr,FALSE);
-               break;
-           }
+    while(1){
+        c = getch();
+        if(c>0){
+            nodelay(stdscr,FALSE);
+            break;
+        }
         attron(A_REVERSE);
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
         refresh();
         napms(400);
         c = getch();
-           if(c>0){  
-               nodelay(stdscr,FALSE);
-               break;
-           }
+        if(c>0){  
+            nodelay(stdscr,FALSE);
+            break;
+        }
         attroff(A_REVERSE);
         move(yLoc,midX-strlen(press_any_key)/2);
         printw("%s",press_any_key);
-         refresh();
+        refresh();
         napms(400);
-       }
-    
+    }
 }
 
 void del_splash_screen(){
@@ -106,7 +105,6 @@ void del_splash_screen(){
         refresh();
         napms(42);
     }
-
     refresh();
 }
 
@@ -139,6 +137,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         
         int breakOut = 0;
         int createNewGame = 0;
+        int howToPlay=0;
 
         print_welcome_message(stdscr);
         wmove(stdscr,LINES/4,COLS/2);
@@ -146,17 +145,17 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         print_question_mark(stdscr,3,COLS-15);
         print_copyrights(stdscr);
 
-        #pragma region 
+         
         char* choices[]={
                 "New Game",
                 "Resume Game",
-                "How to play",
                 "Quit",
+                "How to play",
             };
         ITEM **my_items;
         MENU *myMenu;
         int n_choices=4;
-        ITEM* curr_item;
+        //ITEM* curr_item;
         WINDOW* my_menu_window;
         int width=26;
         my_menu_window=newwin(10,width,LINES/2-5,COLS/2-width/2);
@@ -174,7 +173,11 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         box(my_menu_window,0,0);
         post_menu(myMenu);
         wrefresh(my_menu_window);
-#pragma endregion
+
+
+        if(gameStat.toResume){
+            print_resume_for_game();
+        }
 
         int c;
         while(!breakOut)
@@ -216,11 +219,17 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                             }
                             break;
 
-                        case 3:
+                        case 2:
                             mvprintw(LINES/2,2,"Quit");
                             refresh();
                             breakOut=1;
                             quitGame=1;
+                            break;
+                        
+                        case 3:
+                            show_how_to_play();
+                            breakOut=1;
+                            howToPlay=1;
                             break;
 
                         default:
@@ -257,20 +266,20 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
 
                 gameStat = initializeGameStat();
 
-
-                Question* session_questions = (Question*)malloc((gameStat.questions_count+1)*sizeof(Question));
+                //Question* session_questions = (Question*)malloc((gameStat.questions_count+1)*sizeof(Question));
                 shuffleQuestions(all_questions,q_total_count,gameStat);
-                for(int i=0;i<=gameStat.questions_count;i++){
+
+                /*for(int i=0;i<=gameStat.questions_count;i++){
                     session_questions[i]=all_questions[i];
-                }
-                gameStat.random_set=session_questions;
+                }*/
+                gameStat.random_set=all_questions;
                 
                 gameStat=game_session(gameStat);
-
-                free(session_questions);
+                
+                //free(session_questions);
 
             }else{
-                if(gameStat.toResume){
+                if(gameStat.toResume && !howToPlay){
 
                     printf("A game is being resumed...\n");
                     gameStat.toResume = 0;
@@ -280,8 +289,13 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                 } //else an Options screen could be implemented
             }
         }
+        /*if(gameStat.isGameFinished){
+            free(gameStat.random_set);
+            gameStat.random_set=NULL;
+        }*/
         //getch();
     }
+    return gameStat;
    // getch();
 }
 
@@ -316,7 +330,7 @@ GameStat game_session(GameStat gameStat){
             
     }
 
-    if(i>=maxIndex){
+    if(i>maxIndex){
         gameStat.isGameFinished = 1;
         gameStat.toResume = 0;
     }
@@ -324,8 +338,8 @@ GameStat game_session(GameStat gameStat){
     if(gameStat.isGameFinished){
         show_score(gameStat);
     }
-    return gameStat;
 
+    return gameStat;
 }
 
 GameStat show_question(GameStat gameStat,int i){
@@ -511,6 +525,37 @@ void show_score(GameStat gameStat){
         }
     }
     print_copyrights(stdscr);
+    getch();
+    clear();
+}
+
+void show_how_to_play(){
+    
+    clear();
+    move(0,0);
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+
+    int vertical_offset=4;
+    char up_down_nav_mess[]={"Navigation in menus is done with UP and DOWN keys, ENTER for selection"};
+    char menu_highlight_mess[]={"Every current option is highlighted"};
+    char fifty_option[]={"Press F in oder to use Fifty-Fifty option inside game"};
+    char skip_option[]={"Press B in order to use Skip option inside game"};
+    char quite_option[]={"Press Q in order to turn back in-game to the Main Menu"};
+    char refresh_date[]={"Press R in-game if you wish to refresh the current date and time"};
+    char return_to_menu[]={"-press any key-"};
+
+    mvprintw(vertical_offset,4,"%s",up_down_nav_mess);
+    mvprintw(vertical_offset+1,4,"%s",menu_highlight_mess);
+    mvprintw(vertical_offset+3,4,"%s",fifty_option);
+    mvprintw(vertical_offset+4,4,"%s",skip_option);
+    mvprintw(vertical_offset+6,4,"%s",quite_option);
+    mvprintw(vertical_offset+7,4,"%s",refresh_date);
+    mvprintw(LINES-3,(COLS-strlen(return_to_menu))/2,"%s",return_to_menu);
+
+    refresh();
     getch();
     clear();
 }

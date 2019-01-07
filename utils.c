@@ -14,14 +14,12 @@
 
 
 Question* get_questions(FILE* src,int* questions_count,Question* questions,int *curr_container_size){
-   
   
     char buff_question[BUFMAX];
     char buff_answers[BUFMAX];
 
     int quest_index = *questions_count;
     while(fgets(buff_question,BUFMAX,src)!=NULL && fgets(buff_answers,BUFMAX,src)!=NULL){
-
 
             if(quest_index>=(*curr_container_size)){
                 questions= resize_questions_container(questions,curr_container_size);
@@ -135,6 +133,12 @@ void print_copyrights(WINDOW* wind){
 
     char copyright[]={"copyrights © Popa Stefan-Andrei"};
     mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
+    refresh();
+}
+
+void print_resume_for_game(){
+    char resume_mess[]={"- in-game, press Resume Game to continue current session - "};
+    mvprintw(LINES-LINES/6,(COLS-strlen(resume_mess))/2,"%s",resume_mess);
     refresh();
 }
 
@@ -346,9 +350,11 @@ void print_points(WINDOW* wind, GameStat gameStat,int y, int x){
 
     char right_mess[]={"Right answers: ............ "};
     char wrong_mess[]={"Wrong answers: ............ "};
+    char final_score[]={"Your final score is: "};
 
     mvprintw(y,(COLS-strlen(right_mess)-5)/2,"%s %d/%d",right_mess,gameStat.right_answers,gameStat.questions_count);
     mvprintw(y+1,(COLS- strlen(wrong_mess)-5)/2,"%s %d/%d",wrong_mess,gameStat.wrong_answers,gameStat.questions_count);
+    mvprintw(y+3,(COLS-strlen(final_score))/2,"%s%d",final_score,gameStat.right_answers*10+(-5)*gameStat.wrong_answers);
     wrefresh(wind);
 }
 
@@ -405,10 +411,8 @@ GameStat initializeGameStat(){
 
 void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat){
 
-    int how_many_to_choose = gameStat.questions_count;
     time_t t;
     srand((unsigned) time(&t));
-    Question* chosen_set = (Question*)malloc(how_many_to_choose*sizeof(Question));
     
     for(int i=q_total_count-1;i>1;i--){
       
@@ -514,6 +518,7 @@ void print_answers(WINDOW* wind,Question* question,int* show_options_map,int len
     int win_x;
     int win_y;
     getmaxyx(wind,win_y,win_x);
+    win_y=win_y;
 
     if(show_options_map[0]){
         mvwprintw(wind,2,(win_x-len_a)/2,"%s",question->a_answer);

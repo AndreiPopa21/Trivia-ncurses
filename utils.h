@@ -39,6 +39,8 @@ void print_normal_score(WINDOW* wind, GameStat gameStat);
 
 void print_sad_score(WINDOW* wind, GameStat gameStat);
 
+void print_resume_for_game();
+
 void print_points(WINDOW* wind, GameStat gameStat,int y, int x);
 
 void refresh_local_hour_date();

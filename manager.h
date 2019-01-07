@@ -28,4 +28,6 @@ GameStat show_question(GameStat gameStat,int i);
 
 void show_score(GameStat gameStat);
 
+void show_how_to_play();
+
 #endif
