@@ -66,4 +66,6 @@ GameStat useFifty(GameStat gameStat,Question* question,int* navigation_map, int*
 
 GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_map);
 
+void commit_name_to_leaderboard(char* name);
+
 #endif

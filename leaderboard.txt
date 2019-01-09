@@ -1,0 +1,4 @@
+Andrei:-5
+Andrei:25
+Burtea:25
+Bianca:40

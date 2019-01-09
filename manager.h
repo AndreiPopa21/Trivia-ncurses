@@ -30,4 +30,8 @@ void show_score(GameStat gameStat);
 
 void show_how_to_play();
 
+void save_score_to_leaderboard(GameStat gameStat);
+
+void display_leaderboard();
+
 #endif

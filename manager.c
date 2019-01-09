@@ -18,11 +18,11 @@ void splash_screen(){
     //char line0[]={"                                  "};
     char line1[]={"MMMMMMMMMM         O            O         "};
     char line2[]={"    HH    MMMMM                     ####  "};
-    char line3[]={"    HH    H    H   H V       V  H  I    I "};
-    char line4[]={"    HH    HMMMM    H  V     V   H  WRRRRW "};
-    char line5[]={"    HH    H  H     H   V   V    H  W    W "};
-    char line6[]={"    HH    H   H    H    V V     H  H    H "};
-    char line7[]={"    HH    H    H   H     V      H  H    H "};
+    char line3[]={"    HH    H    H   W W       W  W  H    H "};
+    char line4[]={"    HH    HMMMM    W  W     W   W  WRRRRW "};
+    char line5[]={"    HH    H  W     W   W   W    W  W    W "};
+    char line6[]={"    HH    H   W    W    W W     W  H    H "};
+    char line7[]={"    HH    H    W   W     W      W  H    H "};
 
     int midY= LINES/2;
     int midX= COLS/2;
@@ -59,7 +59,7 @@ void splash_screen(){
     napms(42);   
 
     char copyright[]={"copyrights © Popa Stefan-Andrei"};
-    move(LINES-3,midX-strlen(copyright)/2);
+    move(LINES-2,midX-strlen(copyright)/2);
     for( i=0;i<strlen(copyright);i++){
         printw("%c",copyright[i]);
         refresh();
@@ -145,6 +145,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         int breakOut = 0;
         int createNewGame = 0;
         int howToPlay=0;
+        int leaderboard=0;
 
         print_welcome_message(stdscr);
         wmove(stdscr,LINES/4,COLS/2);
@@ -158,10 +159,11 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                 "Resume Game",
                 "Quit",
                 "How to play",
+                "Leaderboard"
             };
         ITEM **my_items;
         MENU *myMenu;
-        int n_choices=4;
+        int n_choices=5;
         //ITEM* curr_item;
         WINDOW* my_menu_window;
         int width=26;
@@ -234,9 +236,14 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                             break;
                         
                         case 3:
-                            show_how_to_play();
+                            //show_how_to_play();
                             breakOut=1;
                             howToPlay=1;
+                            break;
+                        
+                        case 4:
+                            breakOut=1;
+                            leaderboard=1;
                             break;
 
                         default:
@@ -287,14 +294,24 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                 //free(session_questions);
 
             }else{
-                if(gameStat.toResume && !howToPlay){
+                if(howToPlay){
+                    show_how_to_play();
+                }else{
+                    if(leaderboard){
+                        display_leaderboard();
+                    }
+                    else{
+                        if(gameStat.toResume){
 
-                    printf("A game is being resumed...\n");
-                    gameStat.toResume = 0;
+                        printf("A game is being resumed...\n");
+                        gameStat.toResume = 0;
 
-                    gameStat = game_session(gameStat);
+                        gameStat = game_session(gameStat);
 
-                } //else an Options screen could be implemented
+                        }
+                    }
+                }
+               //else an Options screen could be implemented
             }
         }
     }
@@ -431,8 +448,14 @@ GameStat show_question(GameStat gameStat,int i){
     
     int c;
     int breakOut = 0;
+    int oldPosition;
+    int newPosition;
+    int j;
+
+
     while(!breakOut){
-       
+        
+
         c=wgetch(answers_window);
         switch(c){
             case KEY_UP:
@@ -441,6 +464,74 @@ GameStat show_question(GameStat gameStat,int i){
 
             case KEY_DOWN:
                 gameStat = navigate_answers(navigation_map,gameStat,0,answers_window);
+                break;
+            
+            case 97:
+                if(show_options_map[0]){
+                 
+                    oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,oldPosition,1,"  ");
+                    for(j=0;j<4;j++){
+                        if(navigation_map[j]==1){
+                            gameStat.curr_nav_position=j;
+                            break;
+                        }
+                    }
+                    newPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,newPosition,1,"->");
+                    wrefresh(answers_window);
+                }
+                break;
+            
+            case 98:
+                if(show_options_map[1]){
+                 
+                    oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,oldPosition,1,"  ");
+                    for(j=0;j<4;j++){
+                        if(navigation_map[j]==2){
+                            gameStat.curr_nav_position=j;
+                            break;
+                        }
+                    }
+                    newPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,newPosition,1,"->");
+                    wrefresh(answers_window);
+                }
+                break;
+            
+            case 99:
+                if(show_options_map[2]){
+                   
+                    oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,oldPosition,1,"  ");
+                    for(j=0;j<4;j++){
+                        if(navigation_map[j]==3){
+                            gameStat.curr_nav_position=j;
+                            break;
+                        }
+                    }
+                    newPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,newPosition,1,"->");
+                    wrefresh(answers_window);
+                }
+                break;
+            
+            case 100:
+                if(show_options_map[3]){
+              
+                    oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,oldPosition,1,"  ");
+                    for(j=0;j<4;j++){
+                        if(navigation_map[j]==4){
+                            gameStat.curr_nav_position=j;
+                            break;
+                        }
+                    }
+                    newPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+                    mvwprintw(answers_window,newPosition,1,"->");
+                    wrefresh(answers_window);
+                }
                 break;
 
             case 10:
@@ -473,7 +564,7 @@ GameStat show_question(GameStat gameStat,int i){
                 }
                 break;
 
-            case 98:
+            case 103:
                 if(!gameStat.didSkip){
                     gameStat.didSkip=1;
                     gameStat.skipping=1;
@@ -530,6 +621,7 @@ void show_score(GameStat gameStat){
     print_copyrights(stdscr);
     getch();
     clear();
+    save_score_to_leaderboard(gameStat);
 }
 
 void show_how_to_play(){
@@ -543,6 +635,7 @@ void show_how_to_play(){
 
     int vertical_offset=4;
     char up_down_nav_mess[]={"Navigation in menus is done with UP and DOWN keys, ENTER for selection"};
+    char a_b_c_d_mess[]={"You could press A, B, C, D for faster selection, then press ENTER to confirm"};
     char menu_highlight_mess[]={"Every current option is highlighted"};
     char fifty_option[]={"Press F in oder to use Fifty-Fifty option inside game"};
     char skip_option[]={"Press B in order to use Skip option inside game"};
@@ -550,7 +643,8 @@ void show_how_to_play(){
     char refresh_date[]={"Press R in-game if you wish to refresh the current date and time"};
     char return_to_menu[]={"-press any key-"};
 
-    mvprintw(vertical_offset,4,"%s",up_down_nav_mess);
+    mvprintw(vertical_offset-1,4,"%s",up_down_nav_mess);
+    mvprintw(vertical_offset,4,"%s",a_b_c_d_mess);
     mvprintw(vertical_offset+1,4,"%s",menu_highlight_mess);
     mvprintw(vertical_offset+3,4,"%s",fifty_option);
     mvprintw(vertical_offset+4,4,"%s",skip_option);
@@ -559,6 +653,83 @@ void show_how_to_play(){
     mvprintw(LINES-3,(COLS-strlen(return_to_menu))/2,"%s",return_to_menu);
 
     refresh();
+    getch();
+    clear();
+}
+
+void save_score_to_leaderboard(GameStat gameStat){
+    clear();
+    move(0,0);
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+    refresh();
+
+    char type_name[]={"Type your name (max.20): "};
+    mvprintw(LINES/2,6,"%s",type_name);
+    curs_set(1);
+    echo();
+    refresh();
+    int breakOut=0;
+    char name[20]={0};
+    int charCount=0;
+
+    int toCommitToLeaderbooard=0;
+
+    while(!breakOut && charCount<=20){
+        char c = getch();
+        int c_code= c;
+        switch(c_code){
+            case 10:
+                if(charCount>0){
+                    toCommitToLeaderbooard=1;
+                }
+                breakOut=1;
+                break;
+            default:
+                strcat(name,&c);
+                charCount++;
+                break;
+        }
+    }
+    if(toCommitToLeaderbooard){
+        char toCommit[30]={0};
+        sprintf(toCommit,"%s:%d",name,gameStat.right_answers*10+gameStat.wrong_answers*(-5));
+        commit_name_to_leaderboard(toCommit);
+    }
+
+    curs_set(0);
+    noecho();
+}
+
+void display_leaderboard(){
+
+    clear();
+    move(0,0);
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+    refresh();
+
+    char leaderboard_mess[]={"LEADERBOARD"};
+    
+    mvprintw(5,(COLS-strlen(leaderboard_mess))/2,"%s",leaderboard_mess);
+
+    FILE* fh= fopen("leaderboard.txt","r");
+    char nameBuffer[30]={0};
+    
+    int vertical_offset=10;
+    while(fgets(nameBuffer,30,fh)!=NULL){
+        char* token=strtok(nameBuffer, ":\n");
+        mvprintw(vertical_offset,5,"%s .......................................", token);
+        token=strtok(NULL,":\n");
+        printw("%s",token);
+        vertical_offset++;
+    }
+    print_copyrights(stdscr);
+    fclose(fh);
     getch();
     clear();
 }

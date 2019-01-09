@@ -179,7 +179,7 @@ void unprint_fifty_option(WINDOW* wind){
 }
 
 void print_skip_option(WINDOW* wind){
-    char press[]={"Press B"};
+    char press[]={"Press G"};
     attron(A_BOLD);
     mvwprintw(wind,LINES/2,COLS-COLS/8-2,"SKIP");
     attroff(A_BOLD);
@@ -381,10 +381,6 @@ GameStat navigate_answers(int* navigation_map,GameStat gameStat,int upPressed, W
         mvwprintw(answers_window,newPosition,1,"->");
         gameStat.curr_nav_position = currentPosition;
     }
-
-    //mvprintw(LINES/2,3,"%d",gameStat.curr_nav_position);
-    //refresh();
-
     return gameStat;
 }
 
@@ -594,4 +590,11 @@ void refresh_current_score(GameStat gameStat){
     char score_mess[]={"Score: "};
     mvprintw(LINES/8,COLS/8-2,"%s%d",score_mess,curr_score);
     refresh();
+}
+
+void commit_name_to_leaderboard(char* name){
+    FILE* fh = fopen("leaderboard.txt", "a");
+    fputs(name,fh);
+    fputc('\n',fh);
+    fclose(fh);
 }
