@@ -3,11 +3,17 @@
 
 #include "structs.h"
 
+/*in acest header s-au pus definitiile pentru diferite functii care contribuie
+  la imbunatatirea experientei jocului si la prelucrarea informatiilor repetitive
+  printre utilitatile functiilor de mai jos, se remarca urmatoarele: 
+  decorarea ecranului cu mesaje text si elemente vizuale,
+  prelucrarea fisierelor si a informatiilor din acestea*/
+
 Question* get_questions(FILE* src,int* questions_count,Question* questions,int* curr_container_size);
 
-void free_questions_memory(Question* questions, int quest_count);
-
 Question* resize_questions_container(Question* questions, int* curr_container_size);
+
+void free_questions_memory(Question* questions, int quest_count);
 
 void display_questions(Question* questions,int questions_count);
 
@@ -47,25 +53,40 @@ void refresh_local_hour_date();
 
 void refresh_current_score(GameStat gameStat);
 
-int get_right_answer_index(Question* question);
-
 void print_no_game_to_resume();
 
 void unprint_no_game_to_resume();
 
-///MODULAR - NEW 
+void initialize_screen_margins();
+
+void commit_name_to_leaderboard(char* name);
 
 void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat);
 
-//sets the curr_question_index to 0
+void draw_trivia_logo_with_animation();
+
+void draw_copyrights_with_animation();
+
+void wait_for_any_key_pressed();
+
+void delete_splash_screen();
+
+int calculate_box_around_answers(Question* curr_question);
+
+int get_right_answer_index(Question* question);
+
 GameStat initializeGameStat();
 
-GameStat navigate_answers(int* navigation_map,GameStat gameStat, int upPressed, WINDOW* answer_window);
+GameStat customizeGameStat();
+
+GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int leaderboard);
+
+GameStat navigate_answers_with_up_down_keys(int* navigation_map,GameStat gameStat, int upPressed, WINDOW* answer_window);
+
+GameStat navigate_answers_with_a_b_c_d(int* navigation_map,int index,GameStat gameStat,WINDOW* answer_window);
 
 GameStat useFifty(GameStat gameStat,Question* question,int* navigation_map, int* show_options_map);
 
 GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_map);
-
-void commit_name_to_leaderboard(char* name);
 
 #endif

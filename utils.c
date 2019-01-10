@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "utils.h"
+#include "manager.h"
 #include "structs.h"
 
 #define BUFMAX 300
@@ -23,10 +24,7 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
 
             if(quest_index>=(*curr_container_size)){
                 questions= resize_questions_container(questions,curr_container_size);
-                //printf("S-a marit containerul\n");
             }
-            //printf("The curr size: %d | The occupied size: %d \n",(*curr_container_size),quest_index+1);
-
             char* token=strtok(buff_question, "|\n");
            
             questions[quest_index].question=(char*)malloc(QUESTION_BUFF*sizeof(char));
@@ -39,14 +37,14 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
             strcpy(questions[quest_index].right_answer,token);
 
             
-            
             token=strtok(buff_answers, "|\n");
             questions[quest_index].a_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].b_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].c_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             questions[quest_index].d_answer=(char*)malloc(ANSWER_BUFF*sizeof(char));
             strcpy(questions[quest_index].a_answer,token);
-            for(int i=0;i<3;i++){
+            int i;
+            for(i=0;i<3;i++){
                 token=strtok(NULL,"|\n");
                 switch(i){
                     case 0:
@@ -68,8 +66,16 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
     return questions;
 }
 
+Question* resize_questions_container(Question* questions, int* curr_container_size){
+    Question *addr;
+    addr= (Question*)realloc(questions,(*curr_container_size)*2*sizeof(Question));
+    *curr_container_size = (*curr_container_size)*2;
+    return addr;
+}
+
 void free_questions_memory(Question* questions, int quest_count){
-    for(int i=0;i<quest_count;i++){
+    int i;
+    for(i=0;i<quest_count;i++){
         free(questions[i].question);
         free(questions[i].right_answer);
         free(questions[i].a_answer);
@@ -80,15 +86,10 @@ void free_questions_memory(Question* questions, int quest_count){
     free(questions);
 }
 
-Question* resize_questions_container(Question* questions, int* curr_container_size){
-    Question *addr;
-    addr= (Question*)realloc(questions,(*curr_container_size)*2*sizeof(Question));
-    *curr_container_size = (*curr_container_size)*2;
-    return addr;
-}
-
 void display_questions(Question* questions, int questions_count){
-      for(int i=0;i< questions_count;i++){
+    
+    int i;
+    for(i=0;i< questions_count;i++){
            printf("%s\n",questions[i].question);
            printf("%s\n",questions[i].right_answer);
            printf("%s\n",questions[i].a_answer);
@@ -310,7 +311,6 @@ void refresh_local_hour_date(){
     mvprintw(LINES/8,COLS-COLS/8-2,"         ");
     refresh();
 
-
     time_t rawtime;
     struct tm * timeinfo;
 
@@ -357,9 +357,267 @@ void print_points(WINDOW* wind, GameStat gameStat,int y, int x){
     wrefresh(wind);
 }
 
-GameStat navigate_answers(int* navigation_map,GameStat gameStat,int upPressed, WINDOW* answers_window){
+void initialize_screen_margins(){
+    clear();
+    move(0,0);
+    hline('%',COLS);
+    vline('H',LINES);
+    mvvline(0,COLS-1,'H',LINES);
+    mvhline(LINES-1,0,'%',COLS);
+    refresh();
+}
 
-    //this is the position in the navigation map
+void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat){
+
+    time_t t;
+    int i;
+    srand((unsigned) time(&t));
+    
+    for(i=q_total_count-1;i>1;i--){
+        int pair_seed = rand()%i;
+        Question aux;
+        aux = *(all_questions+i);
+        *(all_questions+i)= *(all_questions+pair_seed);
+        *(all_questions+pair_seed)=aux;
+    }
+
+}
+
+void print_answers(WINDOW* wind,Question* question,int* show_options_map,int len_a,int len_b,int len_c,int len_d){
+
+    int win_x;
+    int win_y;
+    getmaxyx(wind,win_y,win_x);
+    win_y=win_y;
+
+    if(show_options_map[0]){
+        mvwprintw(wind,2,(win_x-len_a)/2,"%s",question->a_answer);
+    }
+    if(show_options_map[1]){
+        mvwprintw(wind,4,(win_x-len_b)/2,"%s",question->b_answer);
+    }
+    if(show_options_map[2]){
+        mvwprintw(wind,6,(win_x-len_c)/2,"%s",question->c_answer);
+    }
+    if(show_options_map[3]){
+        mvwprintw(wind,8,(win_x-len_d)/2,"%s",question->d_answer);
+    }
+}
+
+void refresh_current_score(GameStat gameStat){
+    int curr_score = 10 * gameStat.right_answers + (-5)*gameStat.wrong_answers;
+    char score_mess[]={"Score: "};
+    mvprintw(LINES/8,COLS/8-2,"%s%d",score_mess,curr_score);
+    refresh();
+}
+
+void commit_name_to_leaderboard(char* name){
+    FILE* fh = fopen("leaderboard.txt", "a");
+    fputs(name,fh);
+    fputc('\n',fh);
+    fclose(fh);
+}
+
+void wait_for_any_key_pressed(){
+
+    char press_any_key[]={"- press any key to continue -"};
+    int yLoc = LINES/2+ LINES/4;
+    nodelay(stdscr,TRUE);
+
+    char c;
+    while(1){
+        c = getch();
+        if(c>0){
+            nodelay(stdscr,FALSE);
+            break;
+        }
+        attron(A_REVERSE);
+        move(yLoc,COLS/2-strlen(press_any_key)/2);
+        printw("%s",press_any_key);
+        refresh();
+        napms(400);
+        c = getch();
+        if(c>0){  
+            nodelay(stdscr,FALSE);
+            break;
+        }
+        attroff(A_REVERSE);
+        move(yLoc,COLS/2-strlen(press_any_key)/2);
+        printw("%s",press_any_key);
+        refresh();
+        napms(400);
+    }
+}
+
+void draw_trivia_logo_with_animation(){
+
+    char line1[]={"MMMMMMMMMM         O            O         "};
+    char line2[]={"    HH    MMMMM                     ####  "};
+    char line3[]={"    HH    H    H   W W       W  W  H    H "};
+    char line4[]={"    HH    HMMMM    W  W     W   W  WRRRRW "};
+    char line5[]={"    HH    H  W     W   W   W    W  W    W "};
+    char line6[]={"    HH    H   W    W    W W     W  H    H "};
+    char line7[]={"    HH    H    W   W     W      W  H    H "};
+
+    int midY= LINES/2;
+    int midX= COLS/2;
+    
+    int offset = -(midY-LINES/4);
+    move(midY+offset,midX-strlen(line1)/2);
+    printw("%s",line1);
+    refresh();
+    napms(42);
+    move(midY+offset+1,midX-strlen(line2)/2);
+    printw("%s",line2);
+    refresh();
+    napms(42);
+    move(midY+offset+2,midX-strlen(line3)/2);
+    printw("%s",line3);
+    refresh();
+    napms(42);
+    move(midY+offset+3,midX-strlen(line4)/2);   
+    printw("%s",line4);
+    refresh();
+    napms(42);
+    move(midY+offset+4,midX-strlen(line5)/2);
+    printw("%s",line5);
+    refresh();
+    napms(42);
+    move(midY+offset+5,midX-strlen(line6)/2);
+    printw("%s",line6);
+    refresh();
+    napms(42);
+    move(midY+offset+6,midX-strlen(line7)/2);
+    printw("%s",line7);
+    refresh();
+    napms(42);
+}
+
+void draw_copyrights_with_animation(){
+    
+    int i;
+    char copyright[]={"copyrights © Popa Stefan-Andrei"};
+    move(LINES-2,COLS/2-strlen(copyright)/2);
+    for( i=0;i<strlen(copyright);i++){
+        printw("%c",copyright[i]);
+        refresh();
+        napms(42);
+    }
+}
+
+void delete_splash_screen(){
+    attroff(A_REVERSE);
+    int i,j;
+    for(i=LINES-1;i>=0;i--){
+        for(j=0;j<COLS;j++){
+            mvprintw(i,j," ");
+        }
+        refresh();
+        napms(42);
+    }
+    refresh();
+}
+
+int calculate_box_around_answers(Question* curr_question){
+    
+    int len_a= strlen(curr_question->a_answer);
+    int len_b= strlen(curr_question->b_answer);
+    int len_c= strlen(curr_question->c_answer);
+    int len_d= strlen(curr_question->d_answer);
+
+    int len[4]={len_a,len_b,len_c,len_d};
+
+    int max1= len[0];
+    int i;
+    for(i=1;i<4;i++){
+        if(len[i]>max1){
+            max1=len[i];
+        }
+    }
+
+    return max1; 
+   
+}
+
+int get_right_answer_index(Question* question){
+    char c = *(question->right_answer);
+    int right_answer_index;
+    switch(c){
+        case 'A':
+            right_answer_index=1;
+            break;
+        case 'B':
+            right_answer_index=2;
+            break;
+        case 'C':
+            right_answer_index=3;
+            break;
+        case 'D':
+            right_answer_index=4;
+            break;
+    }   return right_answer_index;
+
+}
+
+GameStat initializeGameStat(){
+
+    GameStat gameStat;
+    gameStat.random_set = NULL;
+    gameStat.questions_count = 10;
+    gameStat.curr_question_index = 1;
+    gameStat.curr_nav_position = 0;
+    gameStat.wrong_answers = 0;
+    gameStat.right_answers = 0;
+    gameStat.didFifty = 0;
+    gameStat.fiftyEncoded = 0;
+    gameStat.didSkip = 0;
+    gameStat.skipping = 0;
+    gameStat.timeLeft = 0;
+    gameStat.toResume = 0;
+    gameStat.isGameFinished = 0;
+
+    return gameStat;
+}
+
+GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int leaderboard){
+    
+    if(quitGame){
+        /*quitting game
+         show message: Are You sure you want to leave?, for future implementation*/
+
+    }else{
+        if(createNewGame){
+            createNewGame=0;
+            gameStat = initializeGameStat();
+
+            shuffleQuestions(all_questions,q_total_count,gameStat);
+            gameStat.random_set=all_questions;
+                
+            gameStat=game_session(gameStat);
+        
+        }else{
+            if(howToPlay){
+                show_how_to_play();
+            }else{
+                if(leaderboard){
+                    display_leaderboard();
+                }else{
+                    if(gameStat.toResume){
+
+                        gameStat.toResume = 0;
+                        gameStat = game_session(gameStat);
+                    }
+                }
+            }   /*else an Options screen could be implemented*/
+        }
+    }
+    return gameStat;
+}
+
+
+GameStat navigate_answers_with_up_down_keys(int* navigation_map,GameStat gameStat,int upPressed, WINDOW* answers_window){
+
+    /*this is the position in the navigation map*/
     int currentPosition = gameStat.curr_nav_position;
 
     if(upPressed){
@@ -384,153 +642,24 @@ GameStat navigate_answers(int* navigation_map,GameStat gameStat,int upPressed, W
     return gameStat;
 }
 
-GameStat initializeGameStat(){
-
-    GameStat gameStat;
-    gameStat.random_set = NULL;
-    gameStat.questions_count = 10;
-    gameStat.curr_question_index = 1;
-    gameStat.curr_nav_position = 0;
-    gameStat.wrong_answers = 0;
-    gameStat.right_answers = 0;
-    gameStat.didFifty = 0;
-    gameStat.fiftyEncoded = 0;
-    gameStat.didSkip = 0;
-    gameStat.skipping = 0;
-    gameStat.timeLeft = 0;
-    gameStat.toResume = 0;
-    gameStat.isGameFinished = 0;
-
+GameStat navigate_answers_with_a_b_c_d(int* navigation_map,int index,GameStat gameStat,WINDOW* answers_window){
+    int newPosition;
+    int oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+    mvwprintw(answers_window,oldPosition,1,"  ");
+    int j;
+    for(j=0;j<4;j++){
+        if(navigation_map[j]==index){
+            gameStat.curr_nav_position=j;
+            break;
+        }
+    }
+    newPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
+    mvwprintw(answers_window,newPosition,1,"->");
+    wrefresh(answers_window);
     return gameStat;
-}
-
-void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat){
-
-    time_t t;
-    srand((unsigned) time(&t));
-    
-    for(int i=q_total_count-1;i>1;i--){
-      
-        int pair_seed = rand()%i;
-        Question aux;
-        aux = *(all_questions+i);
-        *(all_questions+i)= *(all_questions+pair_seed);
-        *(all_questions+pair_seed)=aux;
-    }
-
-}
-
-GameStat useFifty(GameStat gameStat,Question* question,int* navigation_map, int* show_options_map){
-
-    //Question* question = gameStat.random_set + (gameStat.curr_question_index -1);
-    char right_answer = *(question->right_answer);
-
-    int fiftyEncoded=0;
-    int forSelection[3]={0};
-    int a=0;
-    
-
-    for(int i=0;i<4;i++){
-        show_options_map[i]=0;
-    }
-
-    switch(right_answer){
-        case 'A':
-
-           // mvprintw(LINES/2,3,"Uite A");
-
-            a=1;
-            forSelection[0]=2;
-            forSelection[1]=3;
-            forSelection[2]=4;
-
-            show_options_map[0]=1;
-            break;
-        case 'B':
-
-           // mvprintw(LINES/2,3,"Uite B");
-
-            a=2;
-            forSelection[0]=1;
-            forSelection[1]=3;
-            forSelection[2]=4;
-
-    
-            show_options_map[1]=1;
-            break;
-        case 'C':
-
-          //  mvprintw(LINES/2,3,"Uite C");
-
-            a=3;
-            forSelection[0]=1;
-            forSelection[1]=2;
-            forSelection[2]=4;
-
-          
-            show_options_map[2]=1;
-            break;
-        case 'D':
-
-          //  mvprintw(LINES/2,3,"Uite A");
-
-            a=4;
-            forSelection[0]=1;
-            forSelection[1]=2;
-            forSelection[2]=3;
-
-            show_options_map[3]=1;
-            break;
-    }
-
-    time_t t;
-    srand((unsigned) time(&t));
-    int choice= rand()%3;
-    
-    int b = forSelection[choice];
-
-    if(a>b){
-        int aux = a;
-        a= b;
-        b= aux;
-    }
-
-    fiftyEncoded= b*10 + a;
-    gameStat.fiftyEncoded=fiftyEncoded;
-
-    //mvprintw(LINES/2,2,"Choice: %d",gameStat.fiftyEncoded);
-    navigation_map[0]=a;
-    navigation_map[1]=b;
-    navigation_map[2]=a;
-    navigation_map[3]=b;
-    show_options_map[forSelection[choice]-1]=1;
-
-    return gameStat;
-}
-
-void print_answers(WINDOW* wind,Question* question,int* show_options_map,int len_a,int len_b,int len_c,int len_d){
-
-    int win_x;
-    int win_y;
-    getmaxyx(wind,win_y,win_x);
-    win_y=win_y;
-
-    if(show_options_map[0]){
-        mvwprintw(wind,2,(win_x-len_a)/2,"%s",question->a_answer);
-    }
-    if(show_options_map[1]){
-        mvwprintw(wind,4,(win_x-len_b)/2,"%s",question->b_answer);
-    }
-    if(show_options_map[2]){
-        mvwprintw(wind,6,(win_x-len_c)/2,"%s",question->c_answer);
-    }
-    if(show_options_map[3]){
-        mvwprintw(wind,8,(win_x-len_d)/2,"%s",question->d_answer);
-    }
 }
 
 GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_map){
-
 
     int alreadyInitCursor=0;
     if(show_options_map[0]){
@@ -565,36 +694,73 @@ GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_
     return gameStat;
 }
 
-int get_right_answer_index(Question* question){
-    char c = *(question->right_answer);
-    int right_answer_index;
-    switch(c){
+GameStat useFifty(GameStat gameStat,Question* question,int* navigation_map, int* show_options_map){
+
+    char right_answer = *(question->right_answer);
+    int fiftyEncoded=0;
+    int forSelection[3]={0};
+    int a=0;
+    int i;
+
+    for(i=0;i<4;i++){
+        show_options_map[i]=0;
+    }
+
+    switch(right_answer){
+        
         case 'A':
-            right_answer_index=1;
+            a=1;
+            forSelection[0]=2;
+            forSelection[1]=3;
+            forSelection[2]=4;
+            show_options_map[0]=1;
             break;
+
         case 'B':
-            right_answer_index=2;
+            a=2;
+            forSelection[0]=1;
+            forSelection[1]=3;
+            forSelection[2]=4;    
+            show_options_map[1]=1;
             break;
+
         case 'C':
-            right_answer_index=3;
+            a=3;
+            forSelection[0]=1;
+            forSelection[1]=2;
+            forSelection[2]=4;
+            show_options_map[2]=1;
             break;
+
         case 'D':
-            right_answer_index=4;
+            a=4;
+            forSelection[0]=1;
+            forSelection[1]=2;
+            forSelection[2]=3;
+            show_options_map[3]=1;
             break;
-    }   return right_answer_index;
+    }
 
-}
+    time_t t;
+    srand((unsigned) time(&t));
+    
+    int choice= rand()%3;
+    int b = forSelection[choice];
 
-void refresh_current_score(GameStat gameStat){
-    int curr_score = 10 * gameStat.right_answers + (-5)*gameStat.wrong_answers;
-    char score_mess[]={"Score: "};
-    mvprintw(LINES/8,COLS/8-2,"%s%d",score_mess,curr_score);
-    refresh();
-}
+    if(a>b){
+        int aux = a;
+        a= b;
+        b= aux;
+    }
 
-void commit_name_to_leaderboard(char* name){
-    FILE* fh = fopen("leaderboard.txt", "a");
-    fputs(name,fh);
-    fputc('\n',fh);
-    fclose(fh);
+    fiftyEncoded= b*10 + a;
+    gameStat.fiftyEncoded=fiftyEncoded;
+
+    navigation_map[0]=a;
+    navigation_map[1]=b;
+    navigation_map[2]=a;
+    navigation_map[3]=b;
+    show_options_map[forSelection[choice]-1]=1;
+
+    return gameStat;
 }
