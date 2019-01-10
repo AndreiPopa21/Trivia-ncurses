@@ -7,6 +7,7 @@
 #include "utils.h"
 #include <menu.h>
 
+/*functia care afiseaza ecranul de Splash Screen*/
 void splash_screen(){
  
     initialize_screen_margins();
@@ -18,10 +19,12 @@ void splash_screen(){
     wait_for_any_key_pressed();
 }
 
+/*functia care iese din joc*/
 void quit_trivia(){
     endwin();
 }
 
+/*functia care afiseaza ecranul de scor*/
 void show_score(GameStat gameStat){
 
     initialize_screen_margins();
@@ -43,6 +46,7 @@ void show_score(GameStat gameStat){
     save_score_to_leaderboard(gameStat);
 }
 
+/*functia care afiseaza ecranul de How To Play*/
 void show_how_to_play(){
     
     initialize_screen_margins();
@@ -71,6 +75,9 @@ void show_how_to_play(){
     clear();
 }
 
+/*functia care afiseaza ecranul in care se poate tasta numele spre
+  a fi salvat alaturi de scor in Leaderboard. In caz ca niciun nume
+  nu a fost tastat, atunci nu se va salva nimic in Leaderboard*/
 void save_score_to_leaderboard(GameStat gameStat){
    
     initialize_screen_margins();
@@ -112,6 +119,7 @@ void save_score_to_leaderboard(GameStat gameStat){
     noecho();
 }
 
+/*functia care afiseaza ecranul de Leaderboard*/
 void display_leaderboard(){
 
     initialize_screen_margins();
@@ -137,6 +145,7 @@ void display_leaderboard(){
     clear();
 }
 
+/*functia care afiseaza ecranul de meniu principal*/
 GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count){
 
     int quitGame=0;
@@ -251,7 +260,6 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         }	
         
         unpost_menu(myMenu);
-   
         for(i = 0; i < n_choices; ++i){
             free_item(my_items[i]);
         }
@@ -268,6 +276,8 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
     return gameStat;
 }
 
+/*functia de sesiune, care coordoneaza evolutia jocului intre starea de meniu principal
+  si stare de joc in desfasurare (mai multe explicatii in README)*/
 GameStat game_session(GameStat gameStat){
 
     int startIndex = gameStat.curr_question_index;
@@ -306,6 +316,11 @@ GameStat game_session(GameStat gameStat){
     return gameStat;
 }
 
+/*functie care coordoneaza sesiunea de raspuns la o intrebare
+  se construieste ecranul alaturi de elementele decorative,
+  se afiseaza mesajele corespunzatoare, 
+  se coordoneaza inputul jucatorului si actualizeaza mai 
+  departe datele despre sesiunea de joc curent*/
 GameStat show_question(GameStat gameStat,int i){
 
     initialize_screen_margins();
@@ -314,7 +329,8 @@ GameStat show_question(GameStat gameStat,int i){
     print_question_index(stdscr,i,gameStat.questions_count);
     print_indications(stdscr);
 
-    Question* curr_question = gameStat.random_set+(gameStat.curr_question_index-1); /*atata timp cat indexul incepe cu 1*/
+    /*atata timp cat indexul incepe cu 1*/
+    Question* curr_question = gameStat.random_set+(gameStat.curr_question_index-1); 
     print_question_sentence(stdscr,curr_question->question);
 
     if(!gameStat.didSkip){

@@ -7,8 +7,12 @@
   la imbunatatirea experientei jocului si la prelucrarea informatiilor repetitive
   printre utilitatile functiilor de mai jos, se remarca urmatoarele: 
   decorarea ecranului cu mesaje text si elemente vizuale,
-  prelucrarea fisierelor si a informatiilor din acestea*/
+  prelucrarea fisierelor si a informatiilor din acestea,
+  actualizarea elementelor de grafica in functie de inputul jucatorului,
+  curatarea memoriei*/
 
+/*functia care proceseaza fiecare fisier si care adauga
+  intrebarile la containerul de intrebari*/
 Question* get_questions(FILE* src,int* questions_count,Question* questions,int* curr_container_size);
 
 Question* resize_questions_container(Question* questions, int* curr_container_size);
