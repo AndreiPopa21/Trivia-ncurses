@@ -97,7 +97,7 @@ void unprint_no_game_to_resume();
 void initialize_screen_margins();
 
 /*functie care salveaza in fisier numele si scorul jucatorului*/
-void commit_name_to_leaderboard(char* name);
+void commit_name_to_scoreboard(char* name);
 
 /*functie care amesteca intrebarile inainte de inceperea unei sesiuni noi de joc*/
 void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat);
@@ -126,11 +126,9 @@ int get_right_answer_index(Question* question);
   modificand campul gameStat.questions_count*/
 GameStat initializeGameStat();
 
-GameStat customizeGameStat();
-
 /*functie care decide in ce stare evolueaza jocul 
 dupa ce s-a facut o selectie in meniul principal*/
-GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int leaderboard);
+GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int scoreboard);
 
 /*functie care navigheaza cursorul si selectia in ecranul jocului
   cu ajutorul sagetilor UP and DOWN de la tastatura*/

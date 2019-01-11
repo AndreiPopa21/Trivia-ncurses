@@ -7,7 +7,7 @@
 #include "utils.h"
 #include <menu.h>
 
-/*functia care afiseaza ecranul de Splash Screen*/
+
 void splash_screen(){
  
     initialize_screen_margins();
@@ -19,18 +19,19 @@ void splash_screen(){
     wait_for_any_key_pressed();
 }
 
-/*functia care iese din joc*/
+
 void quit_trivia(){
     endwin();
 }
 
-/*functia care afiseaza ecranul de scor*/
+
 void show_score(GameStat gameStat){
 
     initialize_screen_margins();
     
     double right_percentage = ((double)gameStat.right_answers * 100)/(double)gameStat.questions_count;
-
+    
+    
     if(right_percentage>=75){
         print_happy_score(stdscr,gameStat);
     }else{
@@ -43,10 +44,10 @@ void show_score(GameStat gameStat){
     print_copyrights(stdscr);
     getch();
     clear();
-    save_score_to_leaderboard(gameStat);
+    save_score_to_scoreboard(gameStat);
 }
 
-/*functia care afiseaza ecranul de How To Play*/
+
 void show_how_to_play(){
     
     initialize_screen_margins();
@@ -75,10 +76,8 @@ void show_how_to_play(){
     clear();
 }
 
-/*functia care afiseaza ecranul in care se poate tasta numele spre
-  a fi salvat alaturi de scor in Leaderboard. In caz ca niciun nume
-  nu a fost tastat, atunci nu se va salva nimic in Leaderboard*/
-void save_score_to_leaderboard(GameStat gameStat){
+
+void save_score_to_scoreboard(GameStat gameStat){
    
     initialize_screen_margins();
 
@@ -91,7 +90,7 @@ void save_score_to_leaderboard(GameStat gameStat){
     char name[20]={0};
     int charCount=0;
 
-    int toCommitToLeaderbooard=0;
+    int toCommitToScorebooard=0;
 
     while(!breakOut && charCount<=20){
         char c = getch();
@@ -99,7 +98,7 @@ void save_score_to_leaderboard(GameStat gameStat){
         switch(c_code){
             case 10:
                 if(charCount>0){
-                    toCommitToLeaderbooard=1;
+                    toCommitToScorebooard=1;
                 }
                 breakOut=1;
                 break;
@@ -109,43 +108,47 @@ void save_score_to_leaderboard(GameStat gameStat){
                 break;
         }
     }
-    if(toCommitToLeaderbooard){
+    if(toCommitToScorebooard){
         char toCommit[30]={0};
         sprintf(toCommit,"%s:%d",name,gameStat.right_answers*10+gameStat.wrong_answers*(-5));
-        commit_name_to_leaderboard(toCommit);
+        commit_name_to_scoreboard(toCommit);
     }
 
     curs_set(0);
     noecho();
 }
 
-/*functia care afiseaza ecranul de Leaderboard*/
-void display_leaderboard(){
+
+void display_scoreboard(){
 
     initialize_screen_margins();
 
-    char leaderboard_mess[]={"LEADERBOARD"};
+    char leaderboard_mess[]={"SCOREBOARD"};
     
     mvprintw(5,(COLS-strlen(leaderboard_mess))/2,"%s",leaderboard_mess);
 
     FILE* fh= fopen("leaderboard.txt","r");
     char nameBuffer[30]={0};
     
-    int vertical_offset=10;
+    int vertical_offset=8;
     while(fgets(nameBuffer,30,fh)!=NULL){
         char* token=strtok(nameBuffer, ":\n");
-        mvprintw(vertical_offset,5,"%s .......................................", token);
+        mvprintw(vertical_offset,5,"%s ", token);
+        mvhline(vertical_offset,7+strlen(token),'.',COLS-7-strlen(token)-9);
+
         token=strtok(NULL,":\n");
-        printw("%s",token);
-        vertical_offset++;
+        mvprintw(vertical_offset,COLS-8,"%s",token);
+       
+        vertical_offset+=2;
     }
+    refresh();
     print_copyrights(stdscr);
     fclose(fh);
     getch();
     clear();
 }
 
-/*functia care afiseaza ecranul de meniu principal*/
+
 GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count){
 
     int quitGame=0;
@@ -156,7 +159,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         int breakOut = 0;
         int createNewGame = 0;
         int howToPlay=0;
-        int leaderboard=0;
+        int scoreboard=0;
 
         print_welcome_message(stdscr);
         wmove(stdscr,LINES/4,COLS/2);
@@ -174,7 +177,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                 "Resume Game",
                 "Quit",
                 "How to play",
-                "Leaderboard"
+                "Scoreboard"
             };
         ITEM **my_items;
         MENU *myMenu;
@@ -243,9 +246,9 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                             howToPlay=1;
                             break;
                         
-                        case 4: /*Option for opening the Leaderboard*/
+                        case 4: /*Option for opening the Scoreboard*/
                             breakOut=1;
-                            leaderboard=1;
+                            scoreboard=1;
                             break;
 
                         default:
@@ -270,14 +273,13 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         erase();
         refresh();
         
-        gameStat = decide_game_next_state(gameStat,all_questions,q_total_count,quitGame,createNewGame,howToPlay,leaderboard);
+        gameStat = decide_game_next_state(gameStat,all_questions,q_total_count,quitGame,createNewGame,howToPlay,scoreboard);
     }
 
     return gameStat;
 }
 
-/*functia de sesiune, care coordoneaza evolutia jocului intre starea de meniu principal
-  si stare de joc in desfasurare (mai multe explicatii in README)*/
+
 GameStat game_session(GameStat gameStat){
 
     int startIndex = gameStat.curr_question_index;
@@ -316,11 +318,7 @@ GameStat game_session(GameStat gameStat){
     return gameStat;
 }
 
-/*functie care coordoneaza sesiunea de raspuns la o intrebare
-  se construieste ecranul alaturi de elementele decorative,
-  se afiseaza mesajele corespunzatoare, 
-  se coordoneaza inputul jucatorului si actualizeaza mai 
-  departe datele despre sesiunea de joc curent*/
+
 GameStat show_question(GameStat gameStat,int i){
 
     initialize_screen_margins();

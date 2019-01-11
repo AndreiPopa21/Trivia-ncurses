@@ -18,10 +18,10 @@ void show_how_to_play();
 /*functia care afiseaza ecranul in care se poate tasta numele spre
   a fi salvat alaturi de scor in Leaderboard. In caz ca niciun nume
   nu a fost tastat, atunci nu se va salva nimic in Leaderboard*/
-void save_score_to_leaderboard(GameStat gameStat);
+void save_score_to_scoreboard(GameStat gameStat);
 
 /*functia care afiseaza ecranul de Leaderboard*/
-void display_leaderboard();
+void display_scoreboard();
 
 /*functia care afiseaza ecranul de meniu principal*/
 GameStat start_menu(GameStat gameStat, Question* all_questions, int q_total_count);

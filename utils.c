@@ -139,15 +139,13 @@ void print_question_mark(WINDOW* wind,int beginY,int beginX){
     wprintw(wind,"    O      ");
 }
 
-/*functie care printeaza un mesaj in meniul principal si care aduce la
-  cunostinta faptul ca o sesiune de joc este in desfasurare*/
 void print_resume_for_game(){
     char resume_mess[]={"- in-game, press Resume Game to continue current session - "};
     mvprintw(LINES-LINES/6,(COLS-strlen(resume_mess))/2,"%s",resume_mess);
     refresh();
 }
 
-/*functie care printeaza in joc un mesaj cu indexul intrebarii curente*/
+
 void print_question_index(WINDOW* wind,int index,int total){
     
     wmove(wind,LINES/4-LINES/8,0);
@@ -159,7 +157,7 @@ void print_question_index(WINDOW* wind,int index,int total){
     wrefresh(wind);
 }
 
-/*functie care printeaza cerinta intrebarii curente din joc*/
+
 void print_question_sentence(WINDOW* wind, char* question_body){
     int line = LINES/4;
     wmove(wind,line,0);
@@ -170,7 +168,7 @@ void print_question_sentence(WINDOW* wind, char* question_body){
     wrefresh(wind);
 }
 
-/*functie care printeaza in ecranul jocului posibilitatea de utiliza 50/50*/
+
 void print_fifty_option(WINDOW* wind){
     char press[]={"Press F"};
     attron(A_BOLD);
@@ -180,8 +178,7 @@ void print_fifty_option(WINDOW* wind){
     wrefresh(wind);
 }
 
-/*functie care sterge de pe ecran PRESS 50/50 si care, totodata, aduce
-  la cunostinta faptul ca aceasta optiune nu mai poate fi folosita*/
+
 void unprint_fifty_option(WINDOW* wind){
     char press[]={"       "};
     mvwprintw(wind,LINES/2+1,COLS/8-strlen(press)/2,"       ");
@@ -189,7 +186,7 @@ void unprint_fifty_option(WINDOW* wind){
     wrefresh(wind);
 }
 
-/*functie care printeaza in ecranul jocului posibilitatea de a utiliza Skip*/
+
 void print_skip_option(WINDOW* wind){
     char press[]={"Press G"};
     attron(A_BOLD);
@@ -199,8 +196,7 @@ void print_skip_option(WINDOW* wind){
     wrefresh(wind);
 }
 
-/*functie care sterge de pe ecran PRESS SKIP si care, totodata, aduce
-  la cunostinta faptul ca aceasta optiune nu mai poate fi folosita*/
+
 void unprint_skip_option(WINDOW* wind){
     char press[]={"       "};
     mvwprintw(wind,LINES/2+1,COLS-COLS/8-strlen(press)/2,"%s",press);
@@ -208,21 +204,21 @@ void unprint_skip_option(WINDOW* wind){
     wrefresh(stdscr);
 }
 
-/*functie care afiseaza indicatii de navigare prin tastatura pe ecranul jocului*/
+
 void print_indications(WINDOW* wind){
     char indic[]={"- navigate with UP and DOWN keys -"};
     mvwprintw(wind,7*LINES/8,(COLS-strlen(indic))/2,"%s",indic);
     wrefresh(wind);
 }
 
-/*functie care afiseaza in Splash Screen un mesaj de salut pentru jucator*/
+
 void print_welcome_message(WINDOW* wind){
     char welcome_text[]={"Welcome to Trivia"};
     mvwprintw(wind,2,(COLS-strlen(welcome_text))/2,"%s",welcome_text);
     wrefresh(wind);
 }
 
-/*functie care deseneaza ecranul de afisaj al scorului in cazul unui scor bun*/
+
 void print_happy_score(WINDOW* wind, GameStat gameStat){
     
     char line0[]={"   HHHHHHHH   "};
@@ -234,6 +230,8 @@ void print_happy_score(WINDOW* wind, GameStat gameStat){
     char line6[]={"   HHHHHHHH   "};
 
     char message[]={"Congratulations! Your score looks very good!"};
+
+    
 
     int offset=0;
 
@@ -252,7 +250,7 @@ void print_happy_score(WINDOW* wind, GameStat gameStat){
     wrefresh(wind);
 }
 
-/*functie care deseneaza ecranul de afisaj al scorului in cazul unui scor mediu*/
+
 void print_normal_score(WINDOW* wind, GameStat gameStat){
 
     char line0[]={"   HHHHHHHH   "};
@@ -282,7 +280,7 @@ void print_normal_score(WINDOW* wind, GameStat gameStat){
     wrefresh(wind);
 }
 
-/*functie care deseneaza ecranul de afisaj al scorului in cazul unui scor slab*/
+
 void print_sad_score(WINDOW* wind, GameStat gameStat){
 
     char line0[]={"   HHHHHHHH   "};
@@ -312,23 +310,21 @@ void print_sad_score(WINDOW* wind, GameStat gameStat){
     wrefresh(wind);
 }
 
-/*functie care afiseaza un mesaj pentru utilizator in caz ca acesta 
-  a apasat Resume Game, desi nu era nicio sesiune de joc in desfasurare*/
+
 void print_no_game_to_resume(){
     char message[]={"There is no game to be resume"};
     mvprintw(LINES-4,(COLS-strlen(message))/2,"%s",message);
     refresh();
 }
 
-/*functie care sterge mesajul afisat pentru utilizator in caz ca acesta
-  a apasat Resume Game, desi nu era nicio sesiune de joc in desfasurare*/
+
 void unprint_no_game_to_resume(){
     char message[]={"                             "};
     mvprintw(LINES-4,(COLS-strlen(message))/2,"%s",message);
     refresh();
 }
 
-/*functie care reactulizeaza ora si data pe ecranul jocului*/
+
 void refresh_local_hour_date(){
 
     mvprintw(LINES/8,COLS-COLS/8-2,"         ");
@@ -368,8 +364,7 @@ void refresh_local_hour_date(){
     refresh();
 }
 
-/*functie care afiseaza in ecranul de scor numarul de raspunsuri corecte, 
-  gresite, precum si scorul calculat din acestea*/
+
 void print_points(WINDOW* wind, GameStat gameStat,int y, int x){
 
     char right_mess[]={"Right answers: ............ "};
@@ -382,7 +377,7 @@ void print_points(WINDOW* wind, GameStat gameStat,int y, int x){
     wrefresh(wind);
 }
 
-/*functie care deseneaza marginile ecranului*/
+
 void initialize_screen_margins(){
     clear();
     move(0,0);
@@ -393,7 +388,7 @@ void initialize_screen_margins(){
     refresh();
 }
 
-/*functie care amesteca intrebarile inainte de inceperea unei sesiuni noi de joc*/
+
 void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameStat){
 
     time_t t;
@@ -410,8 +405,7 @@ void shuffleQuestions(Question* all_questions,int q_total_count,GameStat gameSta
 
 }
 
-/*functie care afiseaza raspunsurile intrebarii in joc, 
-  in functie de "harta de afisare" data ca si argument*/
+
 void print_answers(WINDOW* wind,Question* question,int* show_options_map,int len_a,int len_b,int len_c,int len_d){
 
     int win_x;
@@ -433,7 +427,7 @@ void print_answers(WINDOW* wind,Question* question,int* show_options_map,int len
     }
 }
 
-/*functie care actualizeaza scorul curent in joc*/
+
 void refresh_current_score(GameStat gameStat){
     int curr_score = 10 * gameStat.right_answers + (-5)*gameStat.wrong_answers;
     char score_mess[]={"Score: "};
@@ -441,15 +435,15 @@ void refresh_current_score(GameStat gameStat){
     refresh();
 }
 
-/*functie care salveaza in fisier numele si scorul jucatorului*/
-void commit_name_to_leaderboard(char* name){
+
+void commit_name_to_scoreboard(char* name){
     FILE* fh = fopen("leaderboard.txt", "a");
     fputs(name,fh);
     fputc('\n',fh);
     fclose(fh);
 }
 
-/*functie care asteapta ca utlizatorul sa apese orice tasta ca sa continue*/
+
 void wait_for_any_key_pressed(){
 
     char press_any_key[]={"- press any key to continue -"};
@@ -481,7 +475,7 @@ void wait_for_any_key_pressed(){
     }
 }
 
-/*functie care deseneaza in Splash Screen logo-ul trivia folosind o animatie*/
+
 void draw_trivia_logo_with_animation(){
 
     char line1[]={"MMMMMMMMMM         O            O         "};
@@ -526,7 +520,7 @@ void draw_trivia_logo_with_animation(){
     napms(42);
 }
 
-/*functie care deseneaza in Splash Screen copyrights-urile folosind o animatie*/
+
 void draw_copyrights_with_animation(){
     
     int i;
@@ -539,7 +533,7 @@ void draw_copyrights_with_animation(){
     }
 }
 
-/*functie care sterge ecranul de Splash Screen*/
+
 void delete_splash_screen(){
     attroff(A_REVERSE);
     int i,j;
@@ -553,7 +547,7 @@ void delete_splash_screen(){
     refresh();
 }
 
-/*functia care calculeaza dimensiunile chenarului in care vor fi incadrate raspunsurile in joc*/
+
 int calculate_box_around_answers(Question* curr_question){
     
     int len_a= strlen(curr_question->a_answer);
@@ -575,8 +569,7 @@ int calculate_box_around_answers(Question* curr_question){
    
 }
 
-/*functie care determina indexul raspunsului corect al intrebarii date
-  functia returneaza 1,2,3 sau 4 */
+
 int get_right_answer_index(Question* question){
     char c = *(question->right_answer);
     int right_answer_index;
@@ -600,9 +593,7 @@ int get_right_answer_index(Question* question){
 
 }
 
-/*functie care initiliazeaza o structura de tip GameStat
-  Nota: se poate schimba numarul de intrebari din sesiunea de joc
-  modificand campul gameStat.questions_count*/
+
 GameStat initializeGameStat(){
 
     GameStat gameStat;
@@ -623,9 +614,8 @@ GameStat initializeGameStat(){
     return gameStat;
 }
 
-/*functie care decide in ce stare evolueaza jocul 
-dupa ce s-a facut o selectie in meniul principal*/
-GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int leaderboard){
+
+GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int q_total_count,int quitGame, int createNewGame, int howToPlay, int scoreboard){
     
     if(quitGame){
         /*quitting game
@@ -645,8 +635,8 @@ GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int 
             if(howToPlay){
                 show_how_to_play();
             }else{
-                if(leaderboard){
-                    display_leaderboard();
+                if(scoreboard){
+                    display_scoreboard();
                 }else{
                     if(gameStat.toResume){
 
@@ -660,8 +650,7 @@ GameStat decide_game_next_state(GameStat gameStat, Question* all_questions, int 
     return gameStat;
 }
 
-/*functie care navigheaza cursorul si selectia in ecranul jocului
-  cu ajutorul sagetilor UP and DOWN de la tastatura*/
+
 GameStat navigate_answers_with_up_down_keys(int* navigation_map,GameStat gameStat,int upPressed, WINDOW* answers_window){
 
     /*this is the position in the navigation map*/
@@ -689,8 +678,7 @@ GameStat navigate_answers_with_up_down_keys(int* navigation_map,GameStat gameSta
     return gameStat;
 }
 
-/*functie care navigheaza cursorul si selectia cu ajutorul 
-  tastelor A,B,C si D*/
+
 GameStat navigate_answers_with_a_b_c_d(int* navigation_map,int index,GameStat gameStat,WINDOW* answers_window){
     int newPosition;
     int oldPosition = (*(navigation_map+gameStat.curr_nav_position))*2;
@@ -708,8 +696,7 @@ GameStat navigate_answers_with_a_b_c_d(int* navigation_map,int index,GameStat ga
     return gameStat;
 }
 
-/*functie care printeaza la inceput cursorul pe ecran, 
-  orientandu-se dupa "harta de afisare"*/
+
 GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_map){
 
     int alreadyInitCursor=0;
@@ -745,8 +732,6 @@ GameStat print_answers_cursor(GameStat gameStat, WINDOW* wind,int* show_options_
     return gameStat;
 }
 
-/*functie care implementeaza functionalitatea de 50/50 si care face 
-  actualizarile corespunzatoare atat pe ecran, cat si in structura de tip GameStat*/
 GameStat useFifty(GameStat gameStat,Question* question,int* navigation_map, int* show_options_map){
 
     char right_answer = *(question->right_answer);

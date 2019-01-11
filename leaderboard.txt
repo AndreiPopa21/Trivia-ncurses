@@ -1,5 +1,3 @@
-Andrei:-5
-Andrei:25
-Burtea:25
-Bianca:40
+Goblin:75
 Stefan Popa:100
+Alvin:40

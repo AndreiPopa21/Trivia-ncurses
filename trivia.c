@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
         return 1;   
 
     }else{
-        //initializarea containerului de intrebari
+        /*initializarea containerului de intrebari*/
         Question* questions=(Question*)malloc(INITIAL_QUESTIONS_CONTAINER_SIZE*sizeof(Question));
         int curr_container_size=INITIAL_QUESTIONS_CONTAINER_SIZE;
         int questions_count=0;
