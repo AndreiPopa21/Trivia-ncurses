@@ -69,7 +69,8 @@ void show_how_to_play(){
     mvprintw(vertical_offset+4,4,"%s",skip_option);
     mvprintw(vertical_offset+6,4,"%s",quite_option);
     mvprintw(vertical_offset+7,4,"%s",refresh_date);
-    mvprintw(LINES-3,(COLS-strlen(return_to_menu))/2,"%s",return_to_menu);
+    mvprintw(LINES-4,(COLS-strlen(return_to_menu))/2,"%s",return_to_menu);
+    print_copyrights(stdscr);
 
     refresh();
     getch();
@@ -82,7 +83,11 @@ void save_score_to_scoreboard(GameStat gameStat){
     initialize_screen_margins();
 
     char type_name[]={"Type your name (max.20): "};
+    char press_enter[]={"Press Enter to skip or confirm"};
+
+    mvprintw(LINES-4,(COLS-strlen(press_enter))/2,"%s",press_enter);
     mvprintw(LINES/2,6,"%s",type_name);
+   
     curs_set(1);
     echo();
     refresh();
@@ -171,7 +176,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
             print_resume_for_game();
         }
 
-
+        /*se construieste grafica meniului principal*/
         char* choices[]={
                 "New Game",
                 "Resume Game",
@@ -200,8 +205,9 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         box(my_menu_window,0,0);
         post_menu(myMenu);
         wrefresh(my_menu_window);
-
-
+       
+        /*navigarea prin meniu, iesirea din while se face odata ce
+          o optiune dintre cele 5 a fost selectata*/
         int c;
         while(!breakOut)
 	    {   
@@ -236,7 +242,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                             }
                             break;
 
-                        case 2: /*Option for quitting*/ 
+                        case 2: /*Optioune for quitting*/ 
                             breakOut=1;
                             quitGame=1;
                             break;
@@ -261,7 +267,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
                     break;
 	        }
         }	
-        
+        /*eliberarea memoriei meniului (incompleta din libraria ncurses)*/
         unpost_menu(myMenu);
         for(i = 0; i < n_choices; ++i){
             free_item(my_items[i]);
@@ -273,6 +279,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
         erase();
         refresh();
         
+        /*optiunea selectata in meniu se analizeaza si se ia aici o decizie*/
         gameStat = decide_game_next_state(gameStat,all_questions,q_total_count,quitGame,createNewGame,howToPlay,scoreboard);
     }
 
@@ -282,6 +289,7 @@ GameStat start_menu(GameStat gameStat,Question* all_questions, int q_total_count
 
 GameStat game_session(GameStat gameStat){
 
+    /*functia de sesiune de joc*/
     int startIndex = gameStat.curr_question_index;
     if(gameStat.didSkip){
         startIndex-=1;
@@ -306,7 +314,7 @@ GameStat game_session(GameStat gameStat){
             }
         }       
     }
-
+    /*daca jocul s-a terminat parcurgand toate cele 10 intrebari*/
     if(i>maxIndex){
         gameStat.isGameFinished = 1;
         gameStat.toResume = 0;
@@ -315,12 +323,14 @@ GameStat game_session(GameStat gameStat){
     if(gameStat.isGameFinished){
         show_score(gameStat);
     }
+    /*daca s-a apasat Q, gameStat.toResume are valoarea 1*/
     return gameStat;
 }
 
 
 GameStat show_question(GameStat gameStat,int i){
 
+    /*se deseneaza elementele grafice*/
     initialize_screen_margins();
 
     print_copyrights(stdscr);
@@ -337,9 +347,16 @@ GameStat show_question(GameStat gameStat,int i){
     
     int right_answer_index = get_right_answer_index(curr_question);
 
+    /*ordinea de navigare a raspunsurilor este date de aceasta "harta"
+    daca s-a apasat 50/50, o ordine posibila a elementelor in aceasta harta poate fi {1,2,1,2} */
     int navigation_map[4]={1,2,3,4};
-    int show_options_map[4]={1,1,1,1};
 
+    /*raspunsurile care trebuie afisate pe ecran sunt date de aceasta "hara"
+      utila mai ales odata ce optiunea de 50/50 a fost apasata*/
+    int show_options_map[4]={1,1,1,1};
+    
+    /*se verifica daca s-a folosit deja optiunea de 50/50 si daca
+      optiunea este inca activa pentru intrebarea curenta*/
     if(!gameStat.didFifty){
          print_fifty_option(stdscr);
     }else{
@@ -369,7 +386,8 @@ GameStat show_question(GameStat gameStat,int i){
    
     refresh_current_score(gameStat);
     refresh_local_hour_date(stdscr);
-
+    
+    /*se creeaza un box in jurul raspunsurilor*/
     WINDOW* answers_window;
 
     int max1=calculate_box_around_answers(curr_question);
@@ -391,10 +409,12 @@ GameStat show_question(GameStat gameStat,int i){
     int c;
     int breakOut = 0;
 
+    /*se navigheaza prin raspunsuri si se astepta o comanda valida a utilizatorului*/
     while(!breakOut){
     
         c=wgetch(answers_window);
         switch(c){
+            /*sistemul de navigare cu sagetile*/
             case KEY_UP:
                 gameStat = navigate_answers_with_up_down_keys(navigation_map,gameStat,1,answers_window);
                 break;
@@ -402,7 +422,7 @@ GameStat show_question(GameStat gameStat,int i){
             case KEY_DOWN:
                 gameStat = navigate_answers_with_up_down_keys(navigation_map,gameStat,0,answers_window);
                 break;
-            
+            /*sostemul de navigare cu A, B, C, D*/
             case 97:
                 if(show_options_map[0]){
                     gameStat = navigate_answers_with_a_b_c_d(navigation_map,1,gameStat,answers_window);
@@ -441,6 +461,7 @@ GameStat show_question(GameStat gameStat,int i){
                 break;
 
             case 102:
+                /*optiunea de 50/50 valabila doar daca nu a mai fost apasata inainte*/
                 if(!gameStat.didFifty){
                     gameStat.didFifty=1;
                     unprint_fifty_option(stdscr);
@@ -454,6 +475,7 @@ GameStat show_question(GameStat gameStat,int i){
                 break;
 
             case 103:
+                /*optiunea de Skip valabila doar daca nu a mai fost apasata inainte*/
                 if(!gameStat.didSkip){
                     gameStat.didSkip=1;
                     gameStat.skipping=1;
@@ -466,6 +488,7 @@ GameStat show_question(GameStat gameStat,int i){
                 break;
 
             case 113:
+                /*se apasa Q pentur a se iesi din joc*/
                 breakOut=1;
                 gameStat.toResume=1;
                 gameStat.curr_nav_position=0;
