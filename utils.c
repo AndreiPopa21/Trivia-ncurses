@@ -66,7 +66,6 @@ Question* get_questions(FILE* src,int* questions_count,Question* questions,int *
     return questions;
 }
 
-/*containerul isi dubleaza capacitatea*/
 Question* resize_questions_container(Question* questions, int* curr_container_size){
     
     Question *addr;
@@ -75,7 +74,7 @@ Question* resize_questions_container(Question* questions, int* curr_container_si
     return addr;
 }
 
-/*functia care elibereaza memoria ocupata de intrebari*/
+
 void free_questions_memory(Question* questions, int quest_count){
     int i;
     for(i=0;i<quest_count;i++){
@@ -89,9 +88,7 @@ void free_questions_memory(Question* questions, int quest_count){
     free(questions);
 }
 
-/*Functie utilizata de-a lungul dezvoltarii pentru debugging.
-  Scopul ei era de-a afisa intrebarile una dupa alta.
-  Starea actuala: Neutilizata*/
+
 void display_questions(Question* questions, int questions_count){
     
     int i;
@@ -105,7 +102,13 @@ void display_questions(Question* questions, int questions_count){
         }
 }
 
-/*functie care deseneaza pe ecran la o pozitie data un semn de intrebare*/
+void print_copyrights(WINDOW* wind){
+
+    char copyright[]={"copyrights © Popa Stefan-Andrei"};
+    mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
+    refresh();
+}
+
 void print_question_mark(WINDOW* wind,int beginY,int beginX){
 
     wmove(wind,beginY,beginX);
@@ -134,14 +137,6 @@ void print_question_mark(WINDOW* wind,int beginY,int beginX){
     wprintw(wind,"           ");
     wmove(wind,beginY+12,beginX);
     wprintw(wind,"    O      ");
-}
-
-/*functie care afiseaza copyrights-urile in partea de jos a ecranului*/
-void print_copyrights(WINDOW* wind){
-
-    char copyright[]={"copyrights © Popa Stefan-Andrei"};
-    mvwprintw(wind,LINES-2,(COLS-strlen(copyright))/2,"%s",copyright);
-    refresh();
 }
 
 /*functie care printeaza un mesaj in meniul principal si care aduce la
