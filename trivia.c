@@ -32,6 +32,7 @@ int main(int argc, char* argv[]){
             if(!src){
                 /*in caz ca un fisier nu a putut fi deschis, se termina programul returnand 1*/
                 fprintf(stderr,"[Eroare]: Fisierul %s nu poate fi deschis\n",argv[i]);
+                free_questions_memory(questions,questions_count);
                 return 1;
 
             }else{
