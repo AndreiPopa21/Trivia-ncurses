@@ -54,7 +54,7 @@ void show_how_to_play(){
 
     int vertical_offset=4;
     char up_down_nav_mess[]={"Navigation in menus is done with UP and DOWN keys, ENTER for selection"};
-    char a_b_c_d_mess[]={"You could press A, B, C, D for faster selection, then press ENTER to confirm"};
+    char a_b_c_d_mess[]={"Press A, B, C, D for faster selection, then press ENTER to confirm"};
     char menu_highlight_mess[]={"Every current option is highlighted"};
     char fifty_option[]={"Press F in oder to use Fifty-Fifty option inside game"};
     char skip_option[]={"Press B in order to use Skip option inside game"};

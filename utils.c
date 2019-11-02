@@ -206,8 +206,8 @@ void unprint_skip_option(WINDOW* wind){
 
 
 void print_indications(WINDOW* wind){
-    char indic[]={"- navigate with UP and DOWN keys -"};
-    mvwprintw(wind,7*LINES/8,(COLS-strlen(indic))/2,"%s",indic);
+   /*char indic[]={"- navigate with UP and DOWN keys -"};*/
+   /* mvwprintw(wind,7*LINES/8,(COLS-strlen(indic))/2,"%s",indic);*/
     wrefresh(wind);
 }
 

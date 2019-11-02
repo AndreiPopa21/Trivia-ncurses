@@ -1,5 +1,6 @@
 Goblin:75
-Stefan Popa:100
 Alvin:40
 Marius:10
 Maxwell:55
+Joker:25
+Batman:10
