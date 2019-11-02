@@ -1,0 +1,17 @@
+How much is 2+2?|A
+A.2|B.3|C.4|D.5
+
+Who is on the one-dollar bill?|C
+A.JFK|B.Abraham Lincoln|C.George Washington|D.Pitagora
+
+How many oscars has Leo DiCaprio won so far?|B
+A.2|B.1|C.0|D.countless
+
+How many eggs could a goose lay?|B
+A.5|B.9|C.20|D.3
+
+When did Kaka won the Ballon d'Oro?|B
+A.2009|B.2007|C.2002|D.2008
+
+What does CPU stand for?|A
+A.Central Processing Unit|B.Central Parallel Unit|C.Central Portal Unity|D.Chrome President Udacore

@@ -312,7 +312,7 @@ void print_sad_score(WINDOW* wind, GameStat gameStat){
 
 
 void print_no_game_to_resume(){
-    char message[]={"There is no game to be resume"};
+    char message[]={"There is no game to be resumed"};
     mvprintw(LINES-4,(COLS-strlen(message))/2,"%s",message);
     refresh();
 }

@@ -7,7 +7,7 @@ trivia: trivia.c manager.c utils.c
 	gcc -g $^ -lmenu -lncurses -o $@
 
 run: trivia
-	./trivia file1.txt file2.txt
+	./trivia questions/file1.txt questions/file2.txt
 
 clean: 
 	rm -f trivia

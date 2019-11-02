@@ -1,0 +1,27 @@
+What is the product of 3*3?|A
+A.9|B.5|C.27|D.13
+
+When do people celebrate St.Valentine?|A
+A.February 14th|B.March 15th|C.March 8th|D.September 20th
+
+Which one is the capital of Romania?|A
+A.Bucharest|B.Belgrade|C.Budapeste|D.Sofia
+
+On which continent does Lake Titicaca exist?|C
+A.Asia|B.Australia|C.South America|D.Africa
+
+How long could an Anaconda snake grow?|B
+A.8.5 meters|B.10.5 meters|C.9 meters|D.7 meters
+
+When did Germany surrender in WW2?|A
+A.May 7th,1945|B.June 6th,1944|C.August 31th,1945|D.August 23rd,1944
+
+Which country won the 2018 World Cup?|D
+A.Germany|B.Italy|C.Argentina|D.France
+
+How many world champions titles does France have in football?|B
+A.3|B.2|C.1|D.0
+
+When did WW1 broke out?|C
+A.1912|B.1913|C.1914|D.1915
+
