@@ -128,7 +128,7 @@ void display_scoreboard(){
 
     initialize_screen_margins();
 
-    char leaderboard_mess[]={"SCOREBOARD"};
+    char leaderboard_mess[]={"LEADERBOARD"};
     
     mvprintw(5,(COLS-strlen(leaderboard_mess))/2,"%s",leaderboard_mess);
 
